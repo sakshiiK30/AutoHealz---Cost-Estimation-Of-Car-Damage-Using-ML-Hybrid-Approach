@@ -1,0 +1,474 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>AutoHealz - Car Repair & Appointment System</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Strive
+  * Template URL: https://bootstrapmade.com/strive-bootstrap-business-template/
+  * Updated: Sep 20 2025 with Bootstrap v5.3.8
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body class="service-details-page">
+
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.webp" alt=""> -->
+        <h1 class="sitename">AutoHealz </h1><span>.</span>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+      <!-- <a class="cta-btn" href="#about">Get Started</a> -->
+
+    </div>
+  </header>
+
+    <style>
+
+.upload-box{
+  border:2px dashed #0d6efd;
+  border-radius:12px;
+  padding:40px;
+  text-align:center;
+  transition:0.3s;
+  background:#f8fbff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+
+    .upload-box:hover{
+      background:#eef5ff;
+      cursor:pointer;
+    }
+
+    .upload-icon{
+      font-size:40px;
+      color:#0d6efd;
+    }
+
+.preview-img{
+  max-height:250px;
+  max-width:100%;
+  border-radius:10px;
+  margin-top:15px;
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+    
+    .result-card{
+      border-radius:12px;
+      border:1px solid #e6e6e6;
+      background:#fff;
+      padding:20px;
+    }
+
+    .damage-item{
+      border-bottom:1px solid #eee;
+      padding:10px 0;
+    }
+
+    .damage-item:last-child{
+      border:none;
+    }
+
+    .cost-box{
+      background:#e9f7ef;
+      border-radius:10px;
+      padding:15px;
+      text-align:center;
+      margin-top:15px;
+    }
+
+  </style>
+
+</head>
+
+<body class="service-details-page">
+
+<!-- Header -->
+<header id="header" class="header d-flex align-items-center sticky-top">
+
+  <div class="container d-flex align-items-center justify-content-between">
+
+    <a href="{% url 'home' %}" class="logo d-flex align-items-center">
+      <h1 class="sitename">AutoHealz</h1><span>.</span>
+    </a>
+
+  </div>
+
+</header>
+
+
+<main class="main">
+
+<!-- Breadcrumb -->
+<div class="page-title">
+
+  <div class="container">
+
+    <nav class="breadcrumbs">
+      <ol>
+        <li><a href="{% url 'home'%}">Home</a></li>
+        <li class="current">Cost Estimation</li>
+      </ol>
+    </nav>
+
+  </div>
+
+</div>
+
+
+
+<!-- ================= COST ESTIMATION SECTION ================= -->
+
+<section class="py-5 bg-light">
+
+<div class="container">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-8">
+
+<div class="card shadow-lg border-0 p-4" style="border-radius:15px">
+
+<!-- Title -->
+<div class="text-center mb-4">
+
+<h2 class="fw-bold text-primary">
+Car Damage Cost Estimation
+</h2>
+
+<p class="text-muted">
+Upload an image of your damaged <b>Maruti Suzuki</b> car to detect damaged parts and estimate repair cost.
+</p>
+
+</div>
+
+
+<!-- Upload Form -->
+<form method="post" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<label class="upload-box w-100">
+
+<i class="bi bi-cloud-arrow-up upload-icon"></i>
+
+<p class="mt-3 mb-2 fw-semibold">
+Click or Drag Image Here
+</p>
+
+<small class="text-muted">
+Supported format: JPG, PNG
+</small>
+
+<input type="file" name="image" id="imageUpload" hidden required>
+
+<img id="preview" class="img-fluid preview-img" style="display:none;">
+
+</label>
+
+
+<button type="submit" class="btn btn-primary w-100 mt-4 py-2 fw-semibold">
+
+<i class="bi bi-search"></i>
+Detect Damage & Estimate Cost
+
+</button>
+
+</form>
+
+
+<!-- ================= RESULTS ================= -->
+
+{% if image_url %}
+
+<div class="result-card mt-5">
+
+<h5 class="fw-bold text-primary mb-3">
+
+Detection Results
+
+</h5>
+
+<div class="text-center">
+
+<img src="{{ image_url }}" class="img-fluid rounded shadow-sm mb-4" style="max-height:300px">
+
+</div>
+
+
+{% if detections %}
+
+<div>
+
+<h6 class="fw-bold mb-3">
+
+Detected Damaged Parts
+
+</h6>
+
+{% for det in detections %}
+
+<div class="damage-item">
+
+<div class="d-flex justify-content-between">
+
+<div>
+
+<strong>{{ det.class }}</strong>
+
+<p class="text-muted mb-0">
+{{ det.caption }}
+</p>
+
+</div>
+
+<i class="bi bi-exclamation-triangle text-danger"></i>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+{% if total_cost %}
+
+<div class="cost-box">
+
+<h5 class="text-success fw-bold mb-0">
+
+Approximate Repair Cost: ₹{{ total_cost }}
+
+</h5>
+
+</div>
+
+{% endif %}
+
+{% else %}
+
+<div class="alert alert-warning mt-3">
+
+No damage detected in the uploaded image.
+
+</div>
+
+{% endif %}
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+</main>
+
+
+<!-- Image Preview Script -->
+<script>
+
+const uploadInput = document.getElementById("imageUpload");
+const preview = document.getElementById("preview");
+
+uploadInput.addEventListener("change", function(){
+
+const file = this.files[0];
+
+if(file){
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+
+preview.style.display="block";
+preview.src = e.target.result;
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+});
+
+</script>
+
+  <footer id="footer" class="footer dark-background">
+
+    <div class="container">
+      <div class="row gy-5">
+
+        <div class="col-lg-4">
+          <div class="footer-content">
+            <a href="index.html" class="logo d-flex align-items-center mb-4">
+              <span class="sitename">AutoHealz</span>
+            </a>
+            <p>At AutoHealz, we bring innovation to car care. Our AI-driven system simplifies damage detection and cost estimation, making your repair experience faster, smarter, and more transparent.</p>
+            <p class="mb-4"></p>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-6">
+          <div class="footer-links">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> About Us</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> Services</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> faq</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> Contact Us</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> Reviews</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="footer-contact">
+            <h4>Get in Touch</h4>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="bi bi-geo-alt"></i>
+              </div>
+              <div class="contact-info">
+                <p>Pimpri Chichwad 411017</p>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="bi bi-telephone"></i>
+              </div>
+              <div class="contact-info">
+                <p>+91 8928856280</p>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="bi bi-envelope"></i>
+              </div>
+              <div class="contact-info">
+                <p>AutoHealz@gmail.com</p>
+              </div>
+            </div>
+
+            <div class="social-links">
+              <a href="#"><i class="bi bi-facebook"></i></a>
+              <a href="#"><i class="bi bi-twitter-x"></i></a>
+              <a href="#"><i class="bi bi-linkedin"></i></a>
+              <a href="#"><i class="bi bi-youtube"></i></a>
+              <a href="#"><i class="bi bi-github"></i></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <div class="copyright">
+              <p>© <span>Copyright</span> <strong class="px-1 sitename">Autohealz</strong> <span>All Rights Reserved</span></p>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="footer-bottom-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Cookie Policy</a>
+            </div>
+            <div class="credits">
+              <!-- All the links in the footer should remain intact. -->
+              <!-- You can delete the links only if you've purchased the pro version. -->
+              <!-- Licensing information: https://bootstrapmade.com/license/ -->
+              <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+              Designed by <a href="https://bootstrapmade.com/">Sakshi Kaspate , Neha Lokhande , Vaishnavi Jagtap</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,1460 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>AutoHealz - Book Appointment</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <link href="{% static 'assets/img/logo1.jpg' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    /* ===== BOOKING PAGE STYLES ===== */
+    .booking-section {
+      padding: 60px 0 80px;
+      background: #f8f9fa;
+      min-height: 80vh;
+    }
+
+    .booking-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.08);
+      padding: 2.5rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* ===== STEP PROGRESS BAR ===== */
+    .step-bar {
+      display: flex;
+      margin-bottom: 2.5rem;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+    }
+
+    .step-item {
+      flex: 1;
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      background: #f9fafb;
+      border-right: 1px solid #e5e7eb;
+      cursor: default;
+      user-select: none;
+    }
+
+    .step-item:last-child { border-right: none; }
+
+    .step-item.active {
+      background: #fff3e6;
+      color: #cc5500;
+      font-weight: 600;
+    }
+
+    .step-item.done {
+      background: #eaf3de;
+      color: #3b6d11;
+      font-weight: 600;
+    }
+
+    .step-num {
+      display: inline-flex;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      font-size: 11px;
+      align-items: center;
+      justify-content: center;
+      margin-right: 6px;
+      background: #ddd;
+      color: #666;
+    }
+
+    .step-item.active .step-num { background: #ff7a00; color: #fff; }
+    .step-item.done .step-num   { background: #639922; color: #fff; }
+
+    /* ===== PAGES ===== */
+    .booking-page { display: none; }
+    .booking-page.visible { display: block; }
+
+    /* ===== FORM FIELDS ===== */
+    .field-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .form-control-custom {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #222;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control-custom:focus {
+      border-color: #ff7a00;
+      box-shadow: 0 0 0 3px rgba(255,122,0,0.12);
+    }
+
+    .field-hint { font-size: 11px; color: #aaa; margin-top: 4px; }
+
+    .field-err {
+      font-size: 11px;
+      color: #cc2200;
+      margin-top: 4px;
+      min-height: 16px;
+      display: block;
+    }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 12px;
+    }
+
+    /* ===== SERVICE CARDS ===== */
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .svc-card {
+      padding: 16px 10px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+      background: #fff;
+    }
+
+    .svc-card:hover { background: #f9fafb; border-color: #ccc; }
+
+    .svc-card.selected {
+      background: #fff3e6;
+      border: 2px solid #ff7a00;
+    }
+
+    .svc-icon { font-size: 22px; display: block; margin-bottom: 8px; }
+    .svc-name { font-size: 12px; font-weight: 600; color: #222; }
+    .svc-price { font-size: 11px; color: #888; margin-top: 3px; }
+
+    /* ===== OR DIVIDER ===== */
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0 12px;
+      color: #bbb;
+      font-size: 12px;
+    }
+    .or-divider::before,
+    .or-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    /* ===== TIME SLOTS ===== */
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .slot-chip {
+      padding: 9px 4px;
+      text-align: center;
+      font-size: 12px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+      color: #333;
+      background: #fff;
+      transition: all 0.15s ease;
+    }
+
+    .slot-chip:hover:not(.booked) { background: #f3f4f6; }
+
+    .slot-chip.selected {
+      background: #fff3e6;
+      border: 2px solid #ff7a00;
+      color: #cc5500;
+      font-weight: 600;
+    }
+
+    .slot-chip.booked {
+      background: #fef2f2;
+      color: #f87171;
+      cursor: not-allowed;
+      text-decoration: line-through;
+      border-color: #fecaca;
+    }
+
+    .slot-placeholder {
+      font-size: 13px;
+      color: #aaa;
+      grid-column: 1 / -1;
+      padding: 12px 0;
+    }
+
+    /* Slot loading spinner */
+    .slot-loading {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 0;
+      font-size: 13px;
+      color: #888;
+    }
+
+    .slot-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #e5e7eb;
+      border-top-color: #ff7a00;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Slot legend */
+    .slot-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+      font-size: 11px;
+      color: #888;
+      flex-wrap: wrap;
+    }
+
+    .slot-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+
+    .legend-dot.available { background: #fff; border: 1px solid #e5e7eb; }
+    .legend-dot.booked    { background: #fef2f2; border: 1px solid #fecaca; }
+    .legend-dot.selected  { background: #fff3e6; border: 2px solid #ff7a00; }
+
+    /* ===== SUMMARY ===== */
+    .summary-table {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 11px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 13px;
+    }
+
+    .summary-row:last-child { border-bottom: none; }
+    .summary-label { color: #888; }
+    .summary-val   { color: #111; font-weight: 600; }
+
+    /* ===== NOTICE BOX ===== */
+    .notice-box {
+      background: #fff8f0;
+      border: 1px solid #ffd8a8;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 12px;
+      color: #884400;
+      margin-bottom: 1.2rem;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    .btn-back {
+      padding: 10px 22px;
+      background: none;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #666;
+      transition: background 0.15s;
+    }
+
+    .btn-back:hover { background: #f3f4f6; }
+
+    .btn-next {
+      padding: 11px 30px;
+      background: #ff7a00;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn-next:hover { opacity: 0.88; }
+
+    .btn-next:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ===== SUCCESS PAGE ===== */
+    .success-wrap {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .success-circle {
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      background: #eaf3de;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.2rem;
+      font-size: 30px;
+      color: #3b6d11;
+    }
+
+    .success-title { font-size: 22px; font-weight: 700; color: #111; margin-bottom: 8px; }
+    .success-sub   { font-size: 13px; color: #888; margin-bottom: 1.2rem; }
+
+    .conf-id {
+      display: inline-block;
+      padding: 6px 18px;
+      background: #f3f4f6;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: monospace;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+
+    .success-details {
+      text-align: left;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .success-details .summary-row:last-child { border-bottom: none; }
+
+    /* ===== REPORT UPLOAD ZONE ===== */
+    .report-upload-section {
+      margin-top: 0;
+      padding: 18px;
+      background: linear-gradient(135deg, #f0f4ff 0%, #f8f0ff 100%);
+      border: 2px dashed #c4b5fd;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .report-upload-section:hover,
+    .report-upload-section.drag-over {
+      border-color: #7c3aed;
+      background: linear-gradient(135deg, #ede9fe 0%, #f3e8ff 100%);
+    }
+
+    .report-upload-section.has-report {
+      border-style: solid;
+      border-color: #7c3aed;
+      background: linear-gradient(135deg, #ede9fe 0%, #f3e8ff 100%);
+    }
+
+    .report-upload-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .report-icon-wrap {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .report-upload-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #3b0764;
+      margin-bottom: 2px;
+    }
+
+    .report-upload-sub {
+      font-size: 11px;
+      color: #7e22ce;
+      opacity: 0.75;
+    }
+
+    .report-badge {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: #7c3aed;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 20px;
+      margin-left: auto;
+    }
+
+    .report-badge.visible { display: inline-flex; }
+
+    .report-preview-wrap {
+      display: none;
+      margin-top: 10px;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+
+    .report-preview-wrap.visible { display: block; }
+
+    .report-preview-img {
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .report-preview-info {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .report-file-name {
+      font-size: 12px;
+      color: #444;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+    }
+
+    .report-remove-btn {
+      font-size: 11px;
+      color: #cc2200;
+      background: none;
+      border: 1px solid #fca5a5;
+      border-radius: 6px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .report-remove-btn:hover { background: #fff5f5; }
+
+    .report-extracted {
+      margin-top: 8px;
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .report-extracted.visible { display: flex; }
+
+    .ext-chip {
+      background: #fff;
+      border: 1px solid #d8b4fe;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: #6d28d9;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .ext-chip strong { color: #4c1d95; }
+
+    .report-hint-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0 0;
+      font-size: 11px;
+      color: #7e22ce;
+    }
+
+    .report-hint-bar i { font-size: 13px; }
+
+    /* ===== OR DIVIDER (violet) ===== */
+    .or-divider-violet {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0 14px;
+      color: #a78bfa;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .or-divider-violet::before,
+    .or-divider-violet::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e9d5ff;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 576px) {
+      .booking-card { padding: 1.5rem 1rem; }
+      .service-grid { grid-template-columns: repeat(2, 1fr); }
+      .slot-grid    { grid-template-columns: repeat(3, 1fr); }
+      .step-item    { font-size: 11px; padding: 10px 4px; }
+    }
+  </style>
+</head>
+
+<body class="service-details-page">
+
+  <!-- ===== HEADER ===== -->
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+      <a href="{% url 'home' %}" class="logo d-flex align-items-center me-auto me-xl-0">
+        <h1 class="sitename">AutoHealz</h1><span>.</span>
+      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- ===== BOOKING SECTION ===== -->
+    <section class="booking-section">
+      <div class="container">
+
+        <h2 class="text-center fw-bold mb-2" style="color:#ff7a00; font-size:32px;">
+          Book an Appointment
+        </h2>
+        <p class="text-center text-muted mb-5" style="font-size:15px;">
+          Complete your booking in 3 simple steps
+        </p>
+
+        <div class="booking-card">
+
+          <!-- Step Progress Bar -->
+          <div class="step-bar" id="stepBar">
+            <div class="step-item active" id="s1">
+              <span class="step-num">1</span> Your Info
+            </div>
+            <div class="step-item" id="s2">
+              <span class="step-num">2</span> Service &amp; Time
+            </div>
+            <div class="step-item" id="s3">
+              <span class="step-num">3</span> Confirm
+            </div>
+          </div>
+
+          <!-- ===== PAGE 1: Personal Info ===== -->
+          <div class="booking-page visible" id="p1">
+            <div class="row g-3">
+
+              <div class="col-md-6">
+                <label class="field-label" for="name">Full Name</label>
+                <input class="form-control-custom" type="text" id="name" placeholder="Rohan Sharma">
+                <span class="field-err" id="err-name"></span>
+              </div>
+
+              <div class="col-md-6">
+                <label class="field-label" for="email">Email Address</label>
+                <input class="form-control-custom" type="email" id="email" placeholder="rohan@example.com">
+                <span class="field-err" id="err-email"></span>
+              </div>
+
+              <div class="col-md-6">
+                <label class="field-label" for="phone">Mobile Number</label>
+                <input class="form-control-custom" type="tel" id="phone" maxlength="10" placeholder="98xxxxxxxx">
+                <span class="field-hint">10-digit Indian number starting with 6–9</span>
+                <span class="field-err" id="err-phone"></span>
+              </div>
+
+              <div class="col-md-6">
+                <label class="field-label" for="vehicle">Vehicle Number</label>
+                <input class="form-control-custom" type="text" id="vehicle" placeholder="MH12AB1234">
+                <span class="field-err" id="err-vehicle"></span>
+              </div>
+
+            </div>
+
+            <div class="btn-row">
+              <span></span>
+              <button class="btn-next" onclick="goStep2()">Continue &rarr;</button>
+            </div>
+          </div>
+
+          <!-- ===== PAGE 2: Service & Time ===== -->
+          <div class="booking-page" id="p2">
+
+            <!-- ===== DAMAGE REPORT UPLOAD ===== -->
+            <div class="section-label" style="margin-bottom:8px;">
+              <i class="bi bi-file-earmark-medical" style="color:#7c3aed;margin-right:4px;"></i>
+              Attach Your Damage Report
+              <span style="font-weight:400;color:#bbb;font-size:10px;margin-left:6px;">(optional but recommended)</span>
+            </div>
+
+            <div class="report-upload-section" id="reportZone"
+                 ondragover="handleReportDragOver(event)"
+                 ondragleave="handleReportDragLeave(event)"
+                 ondrop="handleReportDrop(event)"
+                 onclick="triggerReportPick()">
+
+              <div class="report-upload-header">
+                <div class="report-icon-wrap">
+                  <i class="bi bi-file-earmark-medical-fill"></i>
+                </div>
+                <div style="flex:1;">
+                  <div class="report-upload-title">Upload Damage Report</div>
+                  <div class="report-upload-sub">From your AutoHealz estimation — pre-fills service details automatically</div>
+                </div>
+                <span class="report-badge" id="reportBadge">
+                  <i class="bi bi-check-circle-fill"></i> Attached
+                </span>
+              </div>
+
+              <input type="file" id="reportFileInput" accept="image/*,.pdf,.png,.jpg,.jpeg"
+                     style="display:none;" onchange="handleReportFile(this.files[0])">
+
+              <div class="report-preview-wrap" id="reportPreviewWrap">
+                <img id="reportPreviewImg" class="report-preview-img" alt="damage report preview" src="">
+                <div class="report-preview-info">
+                  <span class="report-file-name" id="reportFileName">report.jpg</span>
+                  <button class="report-remove-btn" onclick="removeReport(event)">
+                    <i class="bi bi-x-circle"></i> Remove
+                  </button>
+                </div>
+              </div>
+
+              <div class="report-extracted" id="reportExtracted"></div>
+
+              <div class="report-hint-bar" id="reportHintBar">
+                <i class="bi bi-cloud-arrow-up"></i>
+                <span>Click or drag your damage report image here &mdash; JPG, PNG or PDF accepted</span>
+              </div>
+            </div>
+
+            <div class="or-divider-violet">or choose a service manually</div>
+
+            <!-- ===== SERVICE CARDS ===== -->
+            <div class="section-label">Select a Service</div>
+
+            <div class="service-grid" id="svcGrid">
+              <div class="svc-card" onclick="pickSvc(this, 'Engine Repair', '₹1,500+')">
+                <span class="svc-icon">🔧</span>
+                <div class="svc-name">Engine Repair</div>
+                <div class="svc-price">From ₹1,500</div>
+              </div>
+              <div class="svc-card" onclick="pickSvc(this, 'Brake Service', '₹800+')">
+                <span class="svc-icon">🛑</span>
+                <div class="svc-name">Brake Service</div>
+                <div class="svc-price">From ₹800</div>
+              </div>
+              <div class="svc-card" onclick="pickSvc(this, 'Oil Change & Maintenance', '₹400+')">
+                <span class="svc-icon">🛢️</span>
+                <div class="svc-name">Oil Change</div>
+                <div class="svc-price">From ₹400</div>
+              </div>
+              <div class="svc-card" onclick="pickSvc(this, 'AC Repair', '₹1,200+')">
+                <span class="svc-icon">❄️</span>
+                <div class="svc-name">AC Repair</div>
+                <div class="svc-price">From ₹1,200</div>
+              </div>
+              <div class="svc-card" onclick="pickSvc(this, 'Battery & Electrical', '₹600+')">
+                <span class="svc-icon">⚡</span>
+                <div class="svc-name">Battery &amp; Electrical</div>
+                <div class="svc-price">From ₹600</div>
+              </div>
+              <div class="svc-card" onclick="pickSvc(this, 'Car Wash & Detailing', '₹350+')">
+                <span class="svc-icon">✨</span>
+                <div class="svc-name">Wash &amp; Detailing</div>
+                <div class="svc-price">From ₹350</div>
+              </div>
+            </div>
+
+            <div class="or-divider">or describe your own</div>
+            <div class="row g-2 mb-1">
+              <div class="col-md-8">
+                <label class="field-label" for="svcInput">Type a custom service</label>
+                <input class="form-control-custom" type="text" id="svcInput"
+                       placeholder="e.g. Suspension check, Tyre rotation, Full service..."
+                       oninput="onSvcType(this.value)">
+              </div>
+            </div>
+
+            <span class="field-err" id="err-svc" style="margin-bottom:12px; display:block;"></span>
+
+            <!-- Date Picker -->
+            <div class="row g-3 mt-1">
+              <div class="col-md-6">
+                <label class="field-label" for="date">Preferred Date</label>
+                <input class="form-control-custom" type="date" id="date">
+                <span class="field-err" id="err-date"></span>
+              </div>
+            </div>
+
+            <!-- Time Slots -->
+            <div class="mt-4">
+              <div class="section-label">Available Time Slots</div>
+              <div class="slot-grid" id="slotGrid">
+                <div class="slot-placeholder">Pick a date above to see available slots.</div>
+              </div>
+              <!-- Slot legend — hidden until slots are loaded -->
+              <div class="slot-legend" id="slotLegend" style="display:none;">
+                <div class="slot-legend-item">
+                  <div class="legend-dot available"></div> Available
+                </div>
+                <div class="slot-legend-item">
+                  <div class="legend-dot booked"></div> Already Booked
+                </div>
+                <div class="slot-legend-item">
+                  <div class="legend-dot selected"></div> Your Selection
+                </div>
+              </div>
+              <span class="field-err" id="err-slot" style="margin-top:8px; display:block;"></span>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn-back" onclick="showPage(1)">&larr; Back</button>
+              <button class="btn-next" onclick="goStep3()">Review &rarr;</button>
+            </div>
+          </div>
+
+          <!-- ===== PAGE 3: Confirm ===== -->
+          <div class="booking-page" id="p3">
+
+            <div class="section-label">Booking Summary</div>
+            <div class="summary-table" id="summaryBox"></div>
+
+            <div id="summaryReportRow" style="display:none; margin-bottom:1rem;">
+              <div class="notice-box" style="background:#f5f0ff; border-color:#d8b4fe; color:#5b21b6;">
+                <i class="bi bi-file-earmark-medical-fill" style="font-size:16px; flex-shrink:0; margin-top:1px; color:#7c3aed;"></i>
+                <span id="summaryReportText">Damage report attached: <strong></strong></span>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-12">
+                <label class="field-label" for="notes">
+                  Additional Notes
+                  <span style="font-weight:400; color:#aaa;">(optional)</span>
+                </label>
+                <input class="form-control-custom" type="text" id="notes"
+                       placeholder="e.g. car makes a clicking sound when turning left...">
+              </div>
+            </div>
+
+            <div class="notice-box">
+              <i class="bi bi-info-circle" style="font-size:16px; flex-shrink:0; margin-top:1px;"></i>
+              <span>You'll receive a confirmation SMS &amp; email after booking. Our team will call you 30 minutes before your slot.</span>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn-back" onclick="showPage(2)">&larr; Back</button>
+              <button class="btn-next" id="confirmBtn" onclick="submitBooking()">&#10003; Confirm Booking</button>
+            </div>
+          </div>
+
+          <!-- ===== PAGE 4: Success ===== -->
+          <div class="booking-page" id="p4">
+            <div class="success-wrap">
+              <div class="success-circle">
+                <i class="bi bi-check-lg"></i>
+              </div>
+              <div class="success-title">Appointment Confirmed!</div>
+              <div class="success-sub">We've sent a confirmation to your email &amp; phone number.</div>
+              <div class="conf-id" id="confId">AH-000000</div>
+
+              <div class="success-details" id="successDetails"></div>
+
+              <button class="btn-next" onclick="resetForm()">+ Book Another Appointment</button>
+            </div>
+          </div>
+
+        </div><!-- /.booking-card -->
+      </div><!-- /.container -->
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="footer" class="footer dark-background">
+    <div class="container">
+      <div class="row gy-5">
+
+        <div class="col-lg-4">
+          <div class="footer-content">
+            <a href="index.html" class="logo d-flex align-items-center mb-4">
+              <span class="sitename">AutoHealz</span>
+            </a>
+            <p>At AutoHealz, we bring innovation to car care. Our AI-driven system simplifies damage detection and cost estimation, making your repair experience faster, smarter, and more transparent.</p>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-6">
+          <div class="footer-links">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> About Us</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> Services</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> FAQ</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> Contact Us</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> Reviews</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="footer-contact">
+            <h4>Get in Touch</h4>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="bi bi-geo-alt"></i></div>
+              <div class="contact-info"><p>Pimpri Chinchwad 411017</p></div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="bi bi-telephone"></i></div>
+              <div class="contact-info"><p>+91 8928856280</p></div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="bi bi-envelope"></i></div>
+              <div class="contact-info"><p>AutoHealz@gmail.com</p></div>
+            </div>
+            <div class="social-links">
+              <a href="#"><i class="bi bi-facebook"></i></a>
+              <a href="#"><i class="bi bi-twitter-x"></i></a>
+              <a href="#"><i class="bi bi-linkedin"></i></a>
+              <a href="#"><i class="bi bi-youtube"></i></a>
+              <a href="#"><i class="bi bi-github"></i></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <div class="copyright">
+              <p>© <span>Copyright</span> <strong class="px-1 sitename">AutoHealz</strong> <span>All Rights Reserved</span></p>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="footer-bottom-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Cookie Policy</a>
+            </div>
+            <div class="credits">
+              Designed by <a href="https://bootstrapmade.com/">Sakshi Kaspate.</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+  </a>
+
+  <div id="preloader"></div>
+
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <!-- ===== BOOKING LOGIC ===== -->
+  <script>
+/* =========================================================
+   AUTOHEALZ BOOKING LOGIC
+   Slots are fetched live from the database via AJAX so that
+   any slot booked by a previous user is shown as unavailable
+   in real time.
+   ========================================================= */
+
+// -------------------- CONFIG --------------------
+// All possible time slots shown each day
+const ALL_SLOTS = [
+  "09:00","09:30","10:00","10:30",
+  "11:00","11:30","12:00","12:30",
+  "13:00","13:30","14:00","14:30",
+  "15:00","15:30","16:00","16:30"
+];
+
+// -------------------- STATE --------------------
+const state = {
+  service: null,
+  price: null,
+  date: null,
+  slot: null,
+  reportFile: null,
+  reportFileName: null,
+  reportDataUrl: null,
+  reportExtracted: {}
+};
+
+// -------------------- INIT --------------------
+document.addEventListener("DOMContentLoaded", () => {
+  // Prevent selecting past dates
+  document.getElementById("date").min = new Date().toISOString().split("T")[0];
+
+  // Phone: digits only
+  document.getElementById("phone").addEventListener("input", e => {
+    e.target.value = e.target.value.replace(/\D/g, "");
+  });
+
+  // Fetch slots whenever the date changes
+  document.getElementById("date").addEventListener("change", fetchAndRenderSlots);
+});
+
+// -------------------- NAVIGATION --------------------
+function showPage(n) {
+  [1,2,3,4].forEach(i =>
+    document.getElementById("p"+i).classList.toggle("visible", i === n)
+  );
+  [1,2,3].forEach(i => {
+    const s = document.getElementById("s"+i);
+    s.classList.remove("active","done");
+    if (i < n)        s.classList.add("done");
+    else if (i === n) s.classList.add("active");
+  });
+  document.querySelector(".booking-card").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// ==========================================
+// ===== SLOTS: FETCH FROM DATABASE =========
+// ==========================================
+
+/**
+ * fetchAndRenderSlots
+ * Called every time the user picks a date.
+ * Hits GET /get-booked-slots/?date=YYYY-MM-DD  →  { booked_slots: [...] }
+ * Then renders the grid, marking already-booked slots in red/strikethrough.
+ */
+async function fetchAndRenderSlots() {
+  const date = document.getElementById("date").value;
+  state.date = date;
+  state.slot = null; // clear any previously chosen slot
+
+  const grid   = document.getElementById("slotGrid");
+  const legend = document.getElementById("slotLegend");
+
+  if (!date) {
+    grid.innerHTML = `<div class="slot-placeholder">Pick a date above to see available slots.</div>`;
+    legend.style.display = "none";
+    return;
+  }
+
+  // Show a loading indicator while fetching
+  grid.innerHTML = `
+    <div class="slot-loading">
+      <div class="slot-spinner"></div>
+      <span>Checking availability…</span>
+    </div>`;
+  legend.style.display = "none";
+
+  let bookedSlots = [];
+
+  try {
+    const res  = await fetch(`/get-booked-slots/?date=${date}`);
+    const data = await res.json();
+    bookedSlots = data.booked_slots || [];
+  } catch (err) {
+    console.error("Could not fetch booked slots:", err);
+    // On network error just show all slots as available
+    bookedSlots = [];
+  }
+
+  renderSlotGrid(bookedSlots);
+  legend.style.display = "flex";
+}
+
+/**
+ * renderSlotGrid
+ * Draws all ALL_SLOTS into the grid.
+ * Slots in bookedSlots array are shown as booked (not clickable).
+ */
+function renderSlotGrid(bookedSlots) {
+  const grid = document.getElementById("slotGrid");
+  grid.innerHTML = "";
+
+  ALL_SLOTS.forEach(time => {
+    const div = document.createElement("div");
+    div.className = "slot-chip";
+
+    if (bookedSlots.includes(time)) {
+      div.classList.add("booked");
+      div.textContent = time;
+      div.title = "This slot is already booked";
+    } else {
+      div.textContent = time;
+      div.addEventListener("click", () => selectSlot(div, time));
+    }
+
+    grid.appendChild(div);
+  });
+}
+
+function selectSlot(el, time) {
+  document.querySelectorAll(".slot-chip").forEach(s => s.classList.remove("selected"));
+  el.classList.add("selected");
+  state.slot = time;
+  setErr("slot", "");
+}
+
+// ==========================================
+// ===== REPORT UPLOAD LOGIC ================
+// ==========================================
+
+function triggerReportPick() {
+  document.getElementById("reportFileInput").click();
+}
+
+function handleReportDragOver(e) {
+  e.preventDefault();
+  document.getElementById("reportZone").classList.add("drag-over");
+}
+
+function handleReportDragLeave() {
+  document.getElementById("reportZone").classList.remove("drag-over");
+}
+
+function handleReportDrop(e) {
+  e.preventDefault();
+  document.getElementById("reportZone").classList.remove("drag-over");
+  const file = e.dataTransfer.files[0];
+  if (file) handleReportFile(file);
+}
+
+function handleReportFile(file) {
+  if (!file) return;
+
+  const allowed = ["image/jpeg","image/png","image/webp","application/pdf"];
+  if (!allowed.includes(file.type)) {
+    alert("Please upload a JPG, PNG, or PDF file.");
+    return;
+  }
+
+  state.reportFile     = file;
+  state.reportFileName = file.name;
+
+  const zone    = document.getElementById("reportZone");
+  const badge   = document.getElementById("reportBadge");
+  const preview = document.getElementById("reportPreviewWrap");
+  const imgEl   = document.getElementById("reportPreviewImg");
+  const nameEl  = document.getElementById("reportFileName");
+  const hintBar = document.getElementById("reportHintBar");
+  const extWrap = document.getElementById("reportExtracted");
+
+  nameEl.textContent = file.name;
+  zone.classList.add("has-report");
+  badge.classList.add("visible");
+  hintBar.style.display = "none";
+
+  if (file.type.startsWith("image/")) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      state.reportDataUrl = e.target.result;
+      imgEl.src = e.target.result;
+      imgEl.style.display = "block";
+      preview.classList.add("visible");
+      extractReportInfo(file.name);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    imgEl.style.display = "none";
+    preview.classList.add("visible");
+    extractReportInfo(file.name);
+  }
+}
+
+function extractReportInfo(filename) {
+  const extWrap = document.getElementById("reportExtracted");
+  extWrap.innerHTML = "";
+
+  const chips = [
+    { icon: "bi-file-earmark-check", label: "Source", val: "AutoHealz AI Report" },
+    { icon: "bi-info-circle",        label: "File",   val: filename }
+  ];
+
+  chips.forEach(c => {
+    const div = document.createElement("div");
+    div.className = "ext-chip";
+    div.innerHTML = `<i class="bi ${c.icon}"></i> ${c.label}: <strong>${c.val}</strong>`;
+    extWrap.appendChild(div);
+  });
+
+  extWrap.classList.add("visible");
+
+  if (!state.service) {
+    state.service = "Damage Repair (from AI Report)";
+    state.price   = "As estimated";
+    const inp = document.getElementById("svcInput");
+    if (inp) inp.value = state.service;
+    setErr("svc", "");
+  }
+}
+
+function removeReport(e) {
+  e.stopPropagation();
+
+  state.reportFile     = null;
+  state.reportFileName = null;
+  state.reportDataUrl  = null;
+  state.reportExtracted = {};
+
+  const zone    = document.getElementById("reportZone");
+  const badge   = document.getElementById("reportBadge");
+  const preview = document.getElementById("reportPreviewWrap");
+  const extWrap = document.getElementById("reportExtracted");
+  const hintBar = document.getElementById("reportHintBar");
+
+  zone.classList.remove("has-report");
+  badge.classList.remove("visible");
+  preview.classList.remove("visible");
+  extWrap.classList.remove("visible");
+  extWrap.innerHTML = "";
+  hintBar.style.display = "flex";
+
+  document.getElementById("reportFileInput").value = "";
+
+  const inp = document.getElementById("svcInput");
+  if (inp && inp.value === "Damage Repair (from AI Report)") {
+    inp.value = "";
+    state.service = null;
+    state.price   = null;
+  }
+}
+
+// -------------------- SERVICE: card click --------------------
+function pickSvc(el, name, price) {
+  const isAlreadySelected = el.classList.contains("selected");
+  document.querySelectorAll(".svc-card").forEach(c => c.classList.remove("selected"));
+
+  if (isAlreadySelected) {
+    state.service = null;
+    state.price   = null;
+  } else {
+    el.classList.add("selected");
+    state.service = name;
+    state.price   = price;
+    const inp = document.getElementById("svcInput");
+    if (inp) inp.value = "";
+  }
+
+  setErr("svc", "");
+}
+
+// -------------------- SERVICE: typed input --------------------
+function onSvcType(value) {
+  const trimmed = value.trim();
+  if (trimmed) {
+    document.querySelectorAll(".svc-card").forEach(c => c.classList.remove("selected"));
+    state.service = trimmed;
+    state.price   = "To be quoted";
+  } else {
+    state.service = null;
+    state.price   = null;
+  }
+  setErr("svc", "");
+}
+
+// -------------------- ERRORS --------------------
+function setErr(id, msg) {
+  const el = document.getElementById("err-" + id);
+  if (el) el.textContent = msg;
+}
+
+function clearErrs() {
+  ["name","email","phone","vehicle","svc","date","slot"].forEach(id => setErr(id, ""));
+}
+
+// -------------------- STEP 1 → 2 --------------------
+function goStep2() {
+  clearErrs();
+  const name    = val("name");
+  const email   = val("email");
+  const phone   = val("phone");
+  const vehicle = val("vehicle");
+  let ok = true;
+
+  if (!name)    { setErr("name",  "Please enter your full name."); ok = false; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    setErr("email", "Enter a valid email address."); ok = false;
+  }
+  if (!/^[6-9]\d{9}$/.test(phone)) {
+    setErr("phone", "Enter a valid 10-digit Indian mobile number."); ok = false;
+  }
+  if (!vehicle) { setErr("vehicle", "Please enter your vehicle number."); ok = false; }
+
+  if (ok) showPage(2);
+}
+
+// -------------------- STEP 2 → 3 --------------------
+function goStep3() {
+  clearErrs();
+  let ok = true;
+
+  if (!state.service) { setErr("svc",  "Please select or type a service."); ok = false; }
+  if (!state.date)    { setErr("date", "Please pick a date."); ok = false; }
+  if (!state.slot)    { setErr("slot", "Please choose a time slot."); ok = false; }
+
+  if (!ok) return;
+
+  const priceStr = state.price ? ` (${state.price})` : "";
+
+  document.getElementById("summaryBox").innerHTML = [
+    ["Name",    val("name")],
+    ["Email",   val("email")],
+    ["Phone",   val("phone")],
+    ["Vehicle", val("vehicle")],
+    ["Service", state.service + priceStr],
+    ["Date",    formatDate(state.date)],
+    ["Time",    state.slot]
+  ].map(rowHTML).join("");
+
+  const summaryReportRow = document.getElementById("summaryReportRow");
+  if (state.reportFileName) {
+    summaryReportRow.style.display = "block";
+    document.getElementById("summaryReportText").innerHTML =
+      `Damage report attached: <strong>${state.reportFileName}</strong>`;
+  } else {
+    summaryReportRow.style.display = "none";
+  }
+
+  showPage(3);
+}
+
+// -------------------- SUBMIT → saves to Django --------------------
+function submitBooking() {
+  const btn = document.getElementById("confirmBtn");
+  btn.disabled = true;
+  btn.textContent = "Saving…";
+
+  const payload = {
+    name:    val("name"),
+    email:   val("email"),
+    phone:   val("phone"),
+    vehicle: val("vehicle"),
+    service: state.service,
+    date:    state.date,
+    time:    state.slot,
+    notes:   val("notes"),
+    report_file_name: state.reportFileName || null,
+    report_data:      state.reportDataUrl  || null
+  };
+
+  let fetchPromise;
+
+  if (state.reportFile) {
+    const fd = new FormData();
+    Object.entries(payload).forEach(([k, v]) => {
+      if (v !== null && v !== undefined && k !== "report_data") fd.append(k, v);
+    });
+    fd.append("report_file", state.reportFile, state.reportFileName);
+    fetchPromise = fetch("/book-appointment/", {
+      method: "POST",
+      headers: { "X-CSRFToken": getCSRFToken() },
+      body: fd
+    });
+  } else {
+    fetchPromise = fetch("/book-appointment/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken":  getCSRFToken()
+      },
+      body: JSON.stringify(payload)
+    });
+  }
+
+  fetchPromise
+    .then(res => res.json())
+    .then(res => {
+      btn.disabled = false;
+      btn.textContent = "✓ Confirm Booking";
+
+      if (res.status === "success") {
+        const confId = "AH-" + String(res.id).padStart(6, "0");
+        document.getElementById("confId").textContent = confId;
+
+        const notes = val("notes");
+        const rows  = [
+          ["Confirmation ID", confId],
+          ["Name",            payload.name],
+          ["Service",         payload.service],
+          ["Date",            formatDate(payload.date)],
+          ["Time",            payload.time],
+          ["Contact",         payload.phone + " · " + payload.email]
+        ];
+        if (notes) rows.push(["Notes", notes]);
+        if (state.reportFileName) rows.push(["Report", state.reportFileName + " ✓"]);
+
+        document.getElementById("successDetails").innerHTML = rows.map(rowHTML).join("");
+
+        const s3 = document.getElementById("s3");
+        s3.classList.remove("active");
+        s3.classList.add("done");
+        showPage(4);
+      } else {
+        // Re-enable the button and show the server-side error
+        alert("Booking failed: " + (res.message || "Please try again."));
+      }
+    })
+    .catch(err => {
+      btn.disabled = false;
+      btn.textContent = "✓ Confirm Booking";
+      console.error("Booking error:", err);
+      alert("Could not connect to the server. Please try again.");
+    });
+}
+
+// -------------------- RESET --------------------
+function resetForm() {
+  ["name","email","phone","vehicle","notes","svcInput"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+  document.getElementById("date").value = "";
+  Object.assign(state, {
+    service: null, price: null, date: null, slot: null,
+    reportFile: null, reportFileName: null, reportDataUrl: null, reportExtracted: {}
+  });
+  document.querySelectorAll(".svc-card").forEach(c => c.classList.remove("selected"));
+  document.getElementById("slotGrid").innerHTML =
+    `<div class="slot-placeholder">Pick a date above to see available slots.</div>`;
+  document.getElementById("slotLegend").style.display = "none";
+
+  // Reset report zone
+  const zone    = document.getElementById("reportZone");
+  const badge   = document.getElementById("reportBadge");
+  const preview = document.getElementById("reportPreviewWrap");
+  const extWrap = document.getElementById("reportExtracted");
+  const hintBar = document.getElementById("reportHintBar");
+  zone.classList.remove("has-report");
+  badge.classList.remove("visible");
+  preview.classList.remove("visible");
+  extWrap.classList.remove("visible");
+  extWrap.innerHTML = "";
+  hintBar.style.display = "flex";
+  document.getElementById("reportFileInput").value = "";
+
+  showPage(1);
+}
+
+// -------------------- UTILS --------------------
+function val(id) {
+  return (document.getElementById(id)?.value || "").trim();
+}
+
+function formatDate(d) {
+  const [y, m, day] = d.split("-");
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${day} ${months[parseInt(m) - 1]} ${y}`;
+}
+
+function rowHTML(r) {
+  return `<div class="summary-row">
+    <span class="summary-label">${r[0]}</span>
+    <span class="summary-val">${r[1]}</span>
+  </div>`;
+}
+
+function getCSRFToken() {
+  return document.cookie
+    .split("; ")
+    .find(row => row.startsWith("csrftoken"))
+    ?.split("=")[1] || "";
+}
+  </script>
+
+</body>
+</html>

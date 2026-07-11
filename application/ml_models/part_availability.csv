@@ -1,0 +1,379 @@
+part_name,maruti_model,availability,price_range,notes
+Front Bumper,Alto 800,Original,8000-12000,OEM available at authorized service center for Alto 800
+Rear Bumper,Alto 800,Alternative,6000-9000,Aftermarket widely available for Alto 800
+Bonnet / Hood,Alto 800,Not Available,10000-15000,Usually in stock for Alto 800
+Side Door,Alto 800,Original,15000-25000,Must be ordered for Alto 800
+Headlight,Alto 800,Alternative,3000-7000,Readily available for Alto 800
+Taillight,Alto 800,Not Available,2500-6000,Aftermarket preferred for Alto 800
+Side Mirror,Alto 800,Original,1200-2500,Always available for Alto 800
+Front Bumper,Alto 800,Alternative,7000-11000,OEM part for Alto 800
+Rear Bumper,Alto 800,Not Available,5000-8000,Aftermarket available for Alto 800
+Bonnet / Hood,Alto 800,Original,9000-14000,Limited stock for Alto 800
+Side Door,Alto 800,Alternative,12000-20000,Order required for Alto 800
+Headlight,Alto 800,Not Available,2500-6000,Available for Alto 800
+Taillight,Alto 800,Original,2000-5000,Aftermarket for Alto 800
+Side Mirror,Alto 800,Alternative,1000-2000,Always available for Alto 800
+Front Bumper,Alto 800,Not Available,9000-14000,OEM available for Alto 800
+Rear Bumper,Alto 800,Original,7000-11000,Aftermarket available for Alto 800
+Bonnet / Hood,Alto 800,Alternative,12000-18000,Stock depends for Alto 800
+Side Door,Alto 800,Not Available,18000-30000,Order required for Alto 800
+Headlight,Alto 800,Original,4000-9000,Available for Alto 800
+Taillight,Alto 800,Alternative,3500-8000,Aftermarket for Alto 800
+Side Mirror,Alto 800,Not Available,1500-3000,Always available for Alto 800
+Front Bumper,Alto K10,Original,8000-12000,OEM available at authorized service center for Alto K10
+Rear Bumper,Alto K10,Alternative,6000-9000,Aftermarket widely available for Alto K10
+Bonnet / Hood,Alto K10,Not Available,10000-15000,Usually in stock for Alto K10
+Side Door,Alto K10,Original,15000-25000,Must be ordered for Alto K10
+Headlight,Alto K10,Alternative,3000-7000,Readily available for Alto K10
+Taillight,Alto K10,Not Available,2500-6000,Aftermarket preferred for Alto K10
+Side Mirror,Alto K10,Original,1200-2500,Always available for Alto K10
+Front Bumper,Alto K10,Alternative,7000-11000,OEM part for Alto K10
+Rear Bumper,Alto K10,Not Available,5000-8000,Aftermarket available for Alto K10
+Bonnet / Hood,Alto K10,Original,9000-14000,Limited stock for Alto K10
+Side Door,Alto K10,Alternative,12000-20000,Order required for Alto K10
+Headlight,Alto K10,Not Available,2500-6000,Available for Alto K10
+Taillight,Alto K10,Original,2000-5000,Aftermarket for Alto K10
+Side Mirror,Alto K10,Alternative,1000-2000,Always available for Alto K10
+Front Bumper,Alto K10,Not Available,9000-14000,OEM available for Alto K10
+Rear Bumper,Alto K10,Original,7000-11000,Aftermarket available for Alto K10
+Bonnet / Hood,Alto K10,Alternative,12000-18000,Stock depends for Alto K10
+Side Door,Alto K10,Not Available,18000-30000,Order required for Alto K10
+Headlight,Alto K10,Original,4000-9000,Available for Alto K10
+Taillight,Alto K10,Alternative,3500-8000,Aftermarket for Alto K10
+Side Mirror,Alto K10,Not Available,1500-3000,Always available for Alto K10
+Front Bumper,S-Presso,Original,8000-12000,OEM available at authorized service center for S-Presso
+Rear Bumper,S-Presso,Alternative,6000-9000,Aftermarket widely available for S-Presso
+Bonnet / Hood,S-Presso,Not Available,10000-15000,Usually in stock for S-Presso
+Side Door,S-Presso,Original,15000-25000,Must be ordered for S-Presso
+Headlight,S-Presso,Alternative,3000-7000,Readily available for S-Presso
+Taillight,S-Presso,Not Available,2500-6000,Aftermarket preferred for S-Presso
+Side Mirror,S-Presso,Original,1200-2500,Always available for S-Presso
+Front Bumper,S-Presso,Alternative,7000-11000,OEM part for S-Presso
+Rear Bumper,S-Presso,Not Available,5000-8000,Aftermarket available for S-Presso
+Bonnet / Hood,S-Presso,Original,9000-14000,Limited stock for S-Presso
+Side Door,S-Presso,Alternative,12000-20000,Order required for S-Presso
+Headlight,S-Presso,Not Available,2500-6000,Available for S-Presso
+Taillight,S-Presso,Original,2000-5000,Aftermarket for S-Presso
+Side Mirror,S-Presso,Alternative,1000-2000,Always available for S-Presso
+Front Bumper,S-Presso,Not Available,9000-14000,OEM available for S-Presso
+Rear Bumper,S-Presso,Original,7000-11000,Aftermarket available for S-Presso
+Bonnet / Hood,S-Presso,Alternative,12000-18000,Stock depends for S-Presso
+Side Door,S-Presso,Not Available,18000-30000,Order required for S-Presso
+Headlight,S-Presso,Original,4000-9000,Available for S-Presso
+Taillight,S-Presso,Alternative,3500-8000,Aftermarket for S-Presso
+Side Mirror,S-Presso,Not Available,1500-3000,Always available for S-Presso
+Front Bumper,Celerio,Original,8000-12000,OEM available at authorized service center for Celerio
+Rear Bumper,Celerio,Alternative,6000-9000,Aftermarket widely available for Celerio
+Bonnet / Hood,Celerio,Not Available,10000-15000,Usually in stock for Celerio
+Side Door,Celerio,Original,15000-25000,Must be ordered for Celerio
+Headlight,Celerio,Alternative,3000-7000,Readily available for Celerio
+Taillight,Celerio,Not Available,2500-6000,Aftermarket preferred for Celerio
+Side Mirror,Celerio,Original,1200-2500,Always available for Celerio
+Front Bumper,Celerio,Alternative,7000-11000,OEM part for Celerio
+Rear Bumper,Celerio,Not Available,5000-8000,Aftermarket available for Celerio
+Bonnet / Hood,Celerio,Original,9000-14000,Limited stock for Celerio
+Side Door,Celerio,Alternative,12000-20000,Order required for Celerio
+Headlight,Celerio,Not Available,2500-6000,Available for Celerio
+Taillight,Celerio,Original,2000-5000,Aftermarket for Celerio
+Side Mirror,Celerio,Alternative,1000-2000,Always available for Celerio
+Front Bumper,Celerio,Not Available,9000-14000,OEM available for Celerio
+Rear Bumper,Celerio,Original,7000-11000,Aftermarket available for Celerio
+Bonnet / Hood,Celerio,Alternative,12000-18000,Stock depends for Celerio
+Side Door,Celerio,Not Available,18000-30000,Order required for Celerio
+Headlight,Celerio,Original,4000-9000,Available for Celerio
+Taillight,Celerio,Alternative,3500-8000,Aftermarket for Celerio
+Side Mirror,Celerio,Not Available,1500-3000,Always available for Celerio
+Front Bumper,WagonR,Original,8000-12000,OEM available at authorized service center for WagonR
+Rear Bumper,WagonR,Alternative,6000-9000,Aftermarket widely available for WagonR
+Bonnet / Hood,WagonR,Not Available,10000-15000,Usually in stock for WagonR
+Side Door,WagonR,Original,15000-25000,Must be ordered for WagonR
+Headlight,WagonR,Alternative,3000-7000,Readily available for WagonR
+Taillight,WagonR,Not Available,2500-6000,Aftermarket preferred for WagonR
+Side Mirror,WagonR,Original,1200-2500,Always available for WagonR
+Front Bumper,WagonR,Alternative,7000-11000,OEM part for WagonR
+Rear Bumper,WagonR,Not Available,5000-8000,Aftermarket available for WagonR
+Bonnet / Hood,WagonR,Original,9000-14000,Limited stock for WagonR
+Side Door,WagonR,Alternative,12000-20000,Order required for WagonR
+Headlight,WagonR,Not Available,2500-6000,Available for WagonR
+Taillight,WagonR,Original,2000-5000,Aftermarket for WagonR
+Side Mirror,WagonR,Alternative,1000-2000,Always available for WagonR
+Front Bumper,WagonR,Not Available,9000-14000,OEM available for WagonR
+Rear Bumper,WagonR,Original,7000-11000,Aftermarket available for WagonR
+Bonnet / Hood,WagonR,Alternative,12000-18000,Stock depends for WagonR
+Side Door,WagonR,Not Available,18000-30000,Order required for WagonR
+Headlight,WagonR,Original,4000-9000,Available for WagonR
+Taillight,WagonR,Alternative,3500-8000,Aftermarket for WagonR
+Side Mirror,WagonR,Not Available,1500-3000,Always available for WagonR
+Front Bumper,Swift,Original,8000-12000,OEM available at authorized service center for Swift
+Rear Bumper,Swift,Alternative,6000-9000,Aftermarket widely available for Swift
+Bonnet / Hood,Swift,Not Available,10000-15000,Usually in stock for Swift
+Side Door,Swift,Original,15000-25000,Must be ordered for Swift
+Headlight,Swift,Alternative,3000-7000,Readily available for Swift
+Taillight,Swift,Not Available,2500-6000,Aftermarket preferred for Swift
+Side Mirror,Swift,Original,1200-2500,Always available for Swift
+Front Bumper,Swift,Alternative,7000-11000,OEM part for Swift
+Rear Bumper,Swift,Not Available,5000-8000,Aftermarket available for Swift
+Bonnet / Hood,Swift,Original,9000-14000,Limited stock for Swift
+Side Door,Swift,Alternative,12000-20000,Order required for Swift
+Headlight,Swift,Not Available,2500-6000,Available for Swift
+Taillight,Swift,Original,2000-5000,Aftermarket for Swift
+Side Mirror,Swift,Alternative,1000-2000,Always available for Swift
+Front Bumper,Swift,Not Available,9000-14000,OEM available for Swift
+Rear Bumper,Swift,Original,7000-11000,Aftermarket available for Swift
+Bonnet / Hood,Swift,Alternative,12000-18000,Stock depends for Swift
+Side Door,Swift,Not Available,18000-30000,Order required for Swift
+Headlight,Swift,Original,4000-9000,Available for Swift
+Taillight,Swift,Alternative,3500-8000,Aftermarket for Swift
+Side Mirror,Swift,Not Available,1500-3000,Always available for Swift
+Front Bumper,Dzire,Original,8000-12000,OEM available at authorized service center for Dzire
+Rear Bumper,Dzire,Alternative,6000-9000,Aftermarket widely available for Dzire
+Bonnet / Hood,Dzire,Not Available,10000-15000,Usually in stock for Dzire
+Side Door,Dzire,Original,15000-25000,Must be ordered for Dzire
+Headlight,Dzire,Alternative,3000-7000,Readily available for Dzire
+Taillight,Dzire,Not Available,2500-6000,Aftermarket preferred for Dzire
+Side Mirror,Dzire,Original,1200-2500,Always available for Dzire
+Front Bumper,Dzire,Alternative,7000-11000,OEM part for Dzire
+Rear Bumper,Dzire,Not Available,5000-8000,Aftermarket available for Dzire
+Bonnet / Hood,Dzire,Original,9000-14000,Limited stock for Dzire
+Side Door,Dzire,Alternative,12000-20000,Order required for Dzire
+Headlight,Dzire,Not Available,2500-6000,Available for Dzire
+Taillight,Dzire,Original,2000-5000,Aftermarket for Dzire
+Side Mirror,Dzire,Alternative,1000-2000,Always available for Dzire
+Front Bumper,Dzire,Not Available,9000-14000,OEM available for Dzire
+Rear Bumper,Dzire,Original,7000-11000,Aftermarket available for Dzire
+Bonnet / Hood,Dzire,Alternative,12000-18000,Stock depends for Dzire
+Side Door,Dzire,Not Available,18000-30000,Order required for Dzire
+Headlight,Dzire,Original,4000-9000,Available for Dzire
+Taillight,Dzire,Alternative,3500-8000,Aftermarket for Dzire
+Side Mirror,Dzire,Not Available,1500-3000,Always available for Dzire
+Front Bumper,Baleno,Original,8000-12000,OEM available at authorized service center for Baleno
+Rear Bumper,Baleno,Alternative,6000-9000,Aftermarket widely available for Baleno
+Bonnet / Hood,Baleno,Not Available,10000-15000,Usually in stock for Baleno
+Side Door,Baleno,Original,15000-25000,Must be ordered for Baleno
+Headlight,Baleno,Alternative,3000-7000,Readily available for Baleno
+Taillight,Baleno,Not Available,2500-6000,Aftermarket preferred for Baleno
+Side Mirror,Baleno,Original,1200-2500,Always available for Baleno
+Front Bumper,Baleno,Alternative,7000-11000,OEM part for Baleno
+Rear Bumper,Baleno,Not Available,5000-8000,Aftermarket available for Baleno
+Bonnet / Hood,Baleno,Original,9000-14000,Limited stock for Baleno
+Side Door,Baleno,Alternative,12000-20000,Order required for Baleno
+Headlight,Baleno,Not Available,2500-6000,Available for Baleno
+Taillight,Baleno,Original,2000-5000,Aftermarket for Baleno
+Side Mirror,Baleno,Alternative,1000-2000,Always available for Baleno
+Front Bumper,Baleno,Not Available,9000-14000,OEM available for Baleno
+Rear Bumper,Baleno,Original,7000-11000,Aftermarket available for Baleno
+Bonnet / Hood,Baleno,Alternative,12000-18000,Stock depends for Baleno
+Side Door,Baleno,Not Available,18000-30000,Order required for Baleno
+Headlight,Baleno,Original,4000-9000,Available for Baleno
+Taillight,Baleno,Alternative,3500-8000,Aftermarket for Baleno
+Side Mirror,Baleno,Not Available,1500-3000,Always available for Baleno
+Front Bumper,Ignis,Original,8000-12000,OEM available at authorized service center for Ignis
+Rear Bumper,Ignis,Alternative,6000-9000,Aftermarket widely available for Ignis
+Bonnet / Hood,Ignis,Not Available,10000-15000,Usually in stock for Ignis
+Side Door,Ignis,Original,15000-25000,Must be ordered for Ignis
+Headlight,Ignis,Alternative,3000-7000,Readily available for Ignis
+Taillight,Ignis,Not Available,2500-6000,Aftermarket preferred for Ignis
+Side Mirror,Ignis,Original,1200-2500,Always available for Ignis
+Front Bumper,Ignis,Alternative,7000-11000,OEM part for Ignis
+Rear Bumper,Ignis,Not Available,5000-8000,Aftermarket available for Ignis
+Bonnet / Hood,Ignis,Original,9000-14000,Limited stock for Ignis
+Side Door,Ignis,Alternative,12000-20000,Order required for Ignis
+Headlight,Ignis,Not Available,2500-6000,Available for Ignis
+Taillight,Ignis,Original,2000-5000,Aftermarket for Ignis
+Side Mirror,Ignis,Alternative,1000-2000,Always available for Ignis
+Front Bumper,Ignis,Not Available,9000-14000,OEM available for Ignis
+Rear Bumper,Ignis,Original,7000-11000,Aftermarket available for Ignis
+Bonnet / Hood,Ignis,Alternative,12000-18000,Stock depends for Ignis
+Side Door,Ignis,Not Available,18000-30000,Order required for Ignis
+Headlight,Ignis,Original,4000-9000,Available for Ignis
+Taillight,Ignis,Alternative,3500-8000,Aftermarket for Ignis
+Side Mirror,Ignis,Not Available,1500-3000,Always available for Ignis
+Front Bumper,Ciaz,Original,8000-12000,OEM available at authorized service center for Ciaz
+Rear Bumper,Ciaz,Alternative,6000-9000,Aftermarket widely available for Ciaz
+Bonnet / Hood,Ciaz,Not Available,10000-15000,Usually in stock for Ciaz
+Side Door,Ciaz,Original,15000-25000,Must be ordered for Ciaz
+Headlight,Ciaz,Alternative,3000-7000,Readily available for Ciaz
+Taillight,Ciaz,Not Available,2500-6000,Aftermarket preferred for Ciaz
+Side Mirror,Ciaz,Original,1200-2500,Always available for Ciaz
+Front Bumper,Ciaz,Alternative,7000-11000,OEM part for Ciaz
+Rear Bumper,Ciaz,Not Available,5000-8000,Aftermarket available for Ciaz
+Bonnet / Hood,Ciaz,Original,9000-14000,Limited stock for Ciaz
+Side Door,Ciaz,Alternative,12000-20000,Order required for Ciaz
+Headlight,Ciaz,Not Available,2500-6000,Available for Ciaz
+Taillight,Ciaz,Original,2000-5000,Aftermarket for Ciaz
+Side Mirror,Ciaz,Alternative,1000-2000,Always available for Ciaz
+Front Bumper,Ciaz,Not Available,9000-14000,OEM available for Ciaz
+Rear Bumper,Ciaz,Original,7000-11000,Aftermarket available for Ciaz
+Bonnet / Hood,Ciaz,Alternative,12000-18000,Stock depends for Ciaz
+Side Door,Ciaz,Not Available,18000-30000,Order required for Ciaz
+Headlight,Ciaz,Original,4000-9000,Available for Ciaz
+Taillight,Ciaz,Alternative,3500-8000,Aftermarket for Ciaz
+Side Mirror,Ciaz,Not Available,1500-3000,Always available for Ciaz
+Front Bumper,Brezza,Original,8000-12000,OEM available at authorized service center for Brezza
+Rear Bumper,Brezza,Alternative,6000-9000,Aftermarket widely available for Brezza
+Bonnet / Hood,Brezza,Not Available,10000-15000,Usually in stock for Brezza
+Side Door,Brezza,Original,15000-25000,Must be ordered for Brezza
+Headlight,Brezza,Alternative,3000-7000,Readily available for Brezza
+Taillight,Brezza,Not Available,2500-6000,Aftermarket preferred for Brezza
+Side Mirror,Brezza,Original,1200-2500,Always available for Brezza
+Front Bumper,Brezza,Alternative,7000-11000,OEM part for Brezza
+Rear Bumper,Brezza,Not Available,5000-8000,Aftermarket available for Brezza
+Bonnet / Hood,Brezza,Original,9000-14000,Limited stock for Brezza
+Side Door,Brezza,Alternative,12000-20000,Order required for Brezza
+Headlight,Brezza,Not Available,2500-6000,Available for Brezza
+Taillight,Brezza,Original,2000-5000,Aftermarket for Brezza
+Side Mirror,Brezza,Alternative,1000-2000,Always available for Brezza
+Front Bumper,Brezza,Not Available,9000-14000,OEM available for Brezza
+Rear Bumper,Brezza,Original,7000-11000,Aftermarket available for Brezza
+Bonnet / Hood,Brezza,Alternative,12000-18000,Stock depends for Brezza
+Side Door,Brezza,Not Available,18000-30000,Order required for Brezza
+Headlight,Brezza,Original,4000-9000,Available for Brezza
+Taillight,Brezza,Alternative,3500-8000,Aftermarket for Brezza
+Side Mirror,Brezza,Not Available,1500-3000,Always available for Brezza
+Front Bumper,Ertiga,Original,8000-12000,OEM available at authorized service center for Ertiga
+Rear Bumper,Ertiga,Alternative,6000-9000,Aftermarket widely available for Ertiga
+Bonnet / Hood,Ertiga,Not Available,10000-15000,Usually in stock for Ertiga
+Side Door,Ertiga,Original,15000-25000,Must be ordered for Ertiga
+Headlight,Ertiga,Alternative,3000-7000,Readily available for Ertiga
+Taillight,Ertiga,Not Available,2500-6000,Aftermarket preferred for Ertiga
+Side Mirror,Ertiga,Original,1200-2500,Always available for Ertiga
+Front Bumper,Ertiga,Alternative,7000-11000,OEM part for Ertiga
+Rear Bumper,Ertiga,Not Available,5000-8000,Aftermarket available for Ertiga
+Bonnet / Hood,Ertiga,Original,9000-14000,Limited stock for Ertiga
+Side Door,Ertiga,Alternative,12000-20000,Order required for Ertiga
+Headlight,Ertiga,Not Available,2500-6000,Available for Ertiga
+Taillight,Ertiga,Original,2000-5000,Aftermarket for Ertiga
+Side Mirror,Ertiga,Alternative,1000-2000,Always available for Ertiga
+Front Bumper,Ertiga,Not Available,9000-14000,OEM available for Ertiga
+Rear Bumper,Ertiga,Original,7000-11000,Aftermarket available for Ertiga
+Bonnet / Hood,Ertiga,Alternative,12000-18000,Stock depends for Ertiga
+Side Door,Ertiga,Not Available,18000-30000,Order required for Ertiga
+Headlight,Ertiga,Original,4000-9000,Available for Ertiga
+Taillight,Ertiga,Alternative,3500-8000,Aftermarket for Ertiga
+Side Mirror,Ertiga,Not Available,1500-3000,Always available for Ertiga
+Front Bumper,XL6,Original,8000-12000,OEM available at authorized service center for XL6
+Rear Bumper,XL6,Alternative,6000-9000,Aftermarket widely available for XL6
+Bonnet / Hood,XL6,Not Available,10000-15000,Usually in stock for XL6
+Side Door,XL6,Original,15000-25000,Must be ordered for XL6
+Headlight,XL6,Alternative,3000-7000,Readily available for XL6
+Taillight,XL6,Not Available,2500-6000,Aftermarket preferred for XL6
+Side Mirror,XL6,Original,1200-2500,Always available for XL6
+Front Bumper,XL6,Alternative,7000-11000,OEM part for XL6
+Rear Bumper,XL6,Not Available,5000-8000,Aftermarket available for XL6
+Bonnet / Hood,XL6,Original,9000-14000,Limited stock for XL6
+Side Door,XL6,Alternative,12000-20000,Order required for XL6
+Headlight,XL6,Not Available,2500-6000,Available for XL6
+Taillight,XL6,Original,2000-5000,Aftermarket for XL6
+Side Mirror,XL6,Alternative,1000-2000,Always available for XL6
+Front Bumper,XL6,Not Available,9000-14000,OEM available for XL6
+Rear Bumper,XL6,Original,7000-11000,Aftermarket available for XL6
+Bonnet / Hood,XL6,Alternative,12000-18000,Stock depends for XL6
+Side Door,XL6,Not Available,18000-30000,Order required for XL6
+Headlight,XL6,Original,4000-9000,Available for XL6
+Taillight,XL6,Alternative,3500-8000,Aftermarket for XL6
+Side Mirror,XL6,Not Available,1500-3000,Always available for XL6
+Front Bumper,Jimny,Original,8000-12000,OEM available at authorized service center for Jimny
+Rear Bumper,Jimny,Alternative,6000-9000,Aftermarket widely available for Jimny
+Bonnet / Hood,Jimny,Not Available,10000-15000,Usually in stock for Jimny
+Side Door,Jimny,Original,15000-25000,Must be ordered for Jimny
+Headlight,Jimny,Alternative,3000-7000,Readily available for Jimny
+Taillight,Jimny,Not Available,2500-6000,Aftermarket preferred for Jimny
+Side Mirror,Jimny,Original,1200-2500,Always available for Jimny
+Front Bumper,Jimny,Alternative,7000-11000,OEM part for Jimny
+Rear Bumper,Jimny,Not Available,5000-8000,Aftermarket available for Jimny
+Bonnet / Hood,Jimny,Original,9000-14000,Limited stock for Jimny
+Side Door,Jimny,Alternative,12000-20000,Order required for Jimny
+Headlight,Jimny,Not Available,2500-6000,Available for Jimny
+Taillight,Jimny,Original,2000-5000,Aftermarket for Jimny
+Side Mirror,Jimny,Alternative,1000-2000,Always available for Jimny
+Front Bumper,Jimny,Not Available,9000-14000,OEM available for Jimny
+Rear Bumper,Jimny,Original,7000-11000,Aftermarket available for Jimny
+Bonnet / Hood,Jimny,Alternative,12000-18000,Stock depends for Jimny
+Side Door,Jimny,Not Available,18000-30000,Order required for Jimny
+Headlight,Jimny,Original,4000-9000,Available for Jimny
+Taillight,Jimny,Alternative,3500-8000,Aftermarket for Jimny
+Side Mirror,Jimny,Not Available,1500-3000,Always available for Jimny
+Front Bumper,Fronx,Original,8000-12000,OEM available at authorized service center for Fronx
+Rear Bumper,Fronx,Alternative,6000-9000,Aftermarket widely available for Fronx
+Bonnet / Hood,Fronx,Not Available,10000-15000,Usually in stock for Fronx
+Side Door,Fronx,Original,15000-25000,Must be ordered for Fronx
+Headlight,Fronx,Alternative,3000-7000,Readily available for Fronx
+Taillight,Fronx,Not Available,2500-6000,Aftermarket preferred for Fronx
+Side Mirror,Fronx,Original,1200-2500,Always available for Fronx
+Front Bumper,Fronx,Alternative,7000-11000,OEM part for Fronx
+Rear Bumper,Fronx,Not Available,5000-8000,Aftermarket available for Fronx
+Bonnet / Hood,Fronx,Original,9000-14000,Limited stock for Fronx
+Side Door,Fronx,Alternative,12000-20000,Order required for Fronx
+Headlight,Fronx,Not Available,2500-6000,Available for Fronx
+Taillight,Fronx,Original,2000-5000,Aftermarket for Fronx
+Side Mirror,Fronx,Alternative,1000-2000,Always available for Fronx
+Front Bumper,Fronx,Not Available,9000-14000,OEM available for Fronx
+Rear Bumper,Fronx,Original,7000-11000,Aftermarket available for Fronx
+Bonnet / Hood,Fronx,Alternative,12000-18000,Stock depends for Fronx
+Side Door,Fronx,Not Available,18000-30000,Order required for Fronx
+Headlight,Fronx,Original,4000-9000,Available for Fronx
+Taillight,Fronx,Alternative,3500-8000,Aftermarket for Fronx
+Side Mirror,Fronx,Not Available,1500-3000,Always available for Fronx
+Front Bumper,Grand Vitara,Original,8000-12000,OEM available at authorized service center for Grand Vitara
+Rear Bumper,Grand Vitara,Alternative,6000-9000,Aftermarket widely available for Grand Vitara
+Bonnet / Hood,Grand Vitara,Not Available,10000-15000,Usually in stock for Grand Vitara
+Side Door,Grand Vitara,Original,15000-25000,Must be ordered for Grand Vitara
+Headlight,Grand Vitara,Alternative,3000-7000,Readily available for Grand Vitara
+Taillight,Grand Vitara,Not Available,2500-6000,Aftermarket preferred for Grand Vitara
+Side Mirror,Grand Vitara,Original,1200-2500,Always available for Grand Vitara
+Front Bumper,Grand Vitara,Alternative,7000-11000,OEM part for Grand Vitara
+Rear Bumper,Grand Vitara,Not Available,5000-8000,Aftermarket available for Grand Vitara
+Bonnet / Hood,Grand Vitara,Original,9000-14000,Limited stock for Grand Vitara
+Side Door,Grand Vitara,Alternative,12000-20000,Order required for Grand Vitara
+Headlight,Grand Vitara,Not Available,2500-6000,Available for Grand Vitara
+Taillight,Grand Vitara,Original,2000-5000,Aftermarket for Grand Vitara
+Side Mirror,Grand Vitara,Alternative,1000-2000,Always available for Grand Vitara
+Front Bumper,Grand Vitara,Not Available,9000-14000,OEM available for Grand Vitara
+Rear Bumper,Grand Vitara,Original,7000-11000,Aftermarket available for Grand Vitara
+Bonnet / Hood,Grand Vitara,Alternative,12000-18000,Stock depends for Grand Vitara
+Side Door,Grand Vitara,Not Available,18000-30000,Order required for Grand Vitara
+Headlight,Grand Vitara,Original,4000-9000,Available for Grand Vitara
+Taillight,Grand Vitara,Alternative,3500-8000,Aftermarket for Grand Vitara
+Side Mirror,Grand Vitara,Not Available,1500-3000,Always available for Grand Vitara
+Front Bumper,Eeco,Original,8000-12000,OEM available at authorized service center for Eeco
+Rear Bumper,Eeco,Alternative,6000-9000,Aftermarket widely available for Eeco
+Bonnet / Hood,Eeco,Not Available,10000-15000,Usually in stock for Eeco
+Side Door,Eeco,Original,15000-25000,Must be ordered for Eeco
+Headlight,Eeco,Alternative,3000-7000,Readily available for Eeco
+Taillight,Eeco,Not Available,2500-6000,Aftermarket preferred for Eeco
+Side Mirror,Eeco,Original,1200-2500,Always available for Eeco
+Front Bumper,Eeco,Alternative,7000-11000,OEM part for Eeco
+Rear Bumper,Eeco,Not Available,5000-8000,Aftermarket available for Eeco
+Bonnet / Hood,Eeco,Original,9000-14000,Limited stock for Eeco
+Side Door,Eeco,Alternative,12000-20000,Order required for Eeco
+Headlight,Eeco,Not Available,2500-6000,Available for Eeco
+Taillight,Eeco,Original,2000-5000,Aftermarket for Eeco
+Side Mirror,Eeco,Alternative,1000-2000,Always available for Eeco
+Front Bumper,Eeco,Not Available,9000-14000,OEM available for Eeco
+Rear Bumper,Eeco,Original,7000-11000,Aftermarket available for Eeco
+Bonnet / Hood,Eeco,Alternative,12000-18000,Stock depends for Eeco
+Side Door,Eeco,Not Available,18000-30000,Order required for Eeco
+Headlight,Eeco,Original,4000-9000,Available for Eeco
+Taillight,Eeco,Alternative,3500-8000,Aftermarket for Eeco
+Side Mirror,Eeco,Not Available,1500-3000,Always available for Eeco
+Front Bumper,Super Carry,Original,8000-12000,OEM available at authorized service center for Super Carry
+Rear Bumper,Super Carry,Alternative,6000-9000,Aftermarket widely available for Super Carry
+Bonnet / Hood,Super Carry,Not Available,10000-15000,Usually in stock for Super Carry
+Side Door,Super Carry,Original,15000-25000,Must be ordered for Super Carry
+Headlight,Super Carry,Alternative,3000-7000,Readily available for Super Carry
+Taillight,Super Carry,Not Available,2500-6000,Aftermarket preferred for Super Carry
+Side Mirror,Super Carry,Original,1200-2500,Always available for Super Carry
+Front Bumper,Super Carry,Alternative,7000-11000,OEM part for Super Carry
+Rear Bumper,Super Carry,Not Available,5000-8000,Aftermarket available for Super Carry
+Bonnet / Hood,Super Carry,Original,9000-14000,Limited stock for Super Carry
+Side Door,Super Carry,Alternative,12000-20000,Order required for Super Carry
+Headlight,Super Carry,Not Available,2500-6000,Available for Super Carry
+Taillight,Super Carry,Original,2000-5000,Aftermarket for Super Carry
+Side Mirror,Super Carry,Alternative,1000-2000,Always available for Super Carry
+Front Bumper,Super Carry,Not Available,9000-14000,OEM available for Super Carry
+Rear Bumper,Super Carry,Original,7000-11000,Aftermarket available for Super Carry
+Bonnet / Hood,Super Carry,Alternative,12000-18000,Stock depends for Super Carry
+Side Door,Super Carry,Not Available,18000-30000,Order required for Super Carry
+Headlight,Super Carry,Original,4000-9000,Available for Super Carry
+Taillight,Super Carry,Alternative,3500-8000,Aftermarket for Super Carry
+Side Mirror,Super Carry,Not Available,1500-3000,Always available for Super Carry

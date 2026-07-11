@@ -1,0 +1,39 @@
+frontend/
+.idea/
+.vscode/
+matrix-admin-bt5-master/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+
+# Django
+*.log
+db.sqlite3
+staticfiles/
+
+# Media uploads
+media/
+
+# Environment variables
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Optional: ignore ML model files if too large
+# *.pt
+
+# Training datasets
+application/ml_models/car-damage-v1/
+application/car-damage-v1/

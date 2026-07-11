@@ -1,0 +1,544 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoHealz — Damage Estimator</title>
+  <link rel="icon" href="{% static 'assets/img/logo1.jpg' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  <style>
+    :root {
+      --ink:#1a1625;--ink2:#4a4560;--muted:#8b87a0;--border:#e8e5f0;
+      --surface:#f5f3fb;--violet:#6c3ff0;--violet-mid:#8b5cf6;
+      --violet-soft:#f0ecff;--teal:#0fa882;--teal-soft:#e8faf5;
+      --radius:20px;--radius-sm:10px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{min-height:100%;font-family:'DM Sans',sans-serif;color:var(--ink);
+      background:linear-gradient(135deg,#f0ecff 0%,#f8f6ff 50%,#fff5f3 100%)}
+    .ah-header{background:rgba(255,255,255,0.88);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);padding:0 2rem;height:56px;
+      display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:100}
+    .ah-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;
+      color:var(--ink);text-decoration:none;letter-spacing:-0.03em}
+    .ah-logo span{color:var(--violet)}
+    .ah-nav{display:flex;gap:1.5rem;list-style:none}
+    .ah-nav a{font-size:0.85rem;color:var(--ink2);text-decoration:none;transition:color 0.15s}
+    .ah-nav a:hover{color:var(--violet)}
+    .page-wrap{min-height:calc(100vh - 56px - 44px);display:flex;
+      align-items:center;justify-content:center;padding:2rem 1.5rem}
+    .main-card{width:100%;max-width:1060px;background:rgba(255,255,255,0.98);
+      border-radius:var(--radius);border:1.5px solid var(--border);
+      display:grid;grid-template-columns:420px 1fr;overflow:visible;
+      box-shadow:0 12px 56px rgba(108,63,240,0.10),0 2px 14px rgba(0,0,0,0.05)}
+    .card-left{padding:2.75rem 2.25rem 2.75rem 2.75rem;
+      background:linear-gradient(160deg,#faf8ff 0%,#ede8ff 100%);
+      border-right:1.5px solid var(--border);
+      border-radius:var(--radius) 0 0 var(--radius);
+      display:flex;flex-direction:column;justify-content:center;
+      position:relative;overflow:hidden}
+    .card-left::before{content:'';position:absolute;width:340px;height:340px;
+      background:radial-gradient(circle,rgba(108,63,240,0.14) 0%,transparent 70%);
+      top:-90px;left:-70px;border-radius:50%;pointer-events:none}
+    .card-left::after{content:'';position:absolute;width:220px;height:220px;
+      background:radial-gradient(circle,rgba(240,97,74,0.09) 0%,transparent 70%);
+      bottom:-30px;right:-20px;border-radius:50%;pointer-events:none}
+    .hero-tag{display:inline-flex;align-items:center;gap:7px;
+      background:var(--violet-soft);color:var(--violet);border-radius:20px;
+      padding:5px 13px;font-size:0.72rem;font-weight:500;margin-bottom:1.1rem;
+      border:1px solid rgba(108,63,240,0.2);width:fit-content}
+    .hero-tag::before{content:'';width:6px;height:6px;background:var(--violet);
+      border-radius:50%;animation:blink 1.5s ease-in-out infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+    .hero-h1{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,2.6vw,2.6rem);
+      font-weight:800;line-height:1.08;letter-spacing:-0.04em;color:var(--ink);margin-bottom:0.85rem}
+    .hero-h1 span{color:var(--violet)}
+    .hero-sub{font-size:0.85rem;color:var(--ink2);line-height:1.7;margin-bottom:1.75rem}
+    .stat-chips{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+    .stat-chip{background:rgba(255,255,255,0.9);border:1.5px solid var(--border);
+      border-radius:13px;padding:11px 14px;text-align:center}
+    .stat-chip .n{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--violet)}
+    .stat-chip .l{font-size:0.64rem;color:var(--muted);margin-top:2px}
+    .card-right{padding:2.75rem 2.75rem 2.75rem 2.5rem;display:flex;
+      flex-direction:column;justify-content:center;
+      border-radius:0 var(--radius) var(--radius) 0;overflow:visible}
+    .panel-eyebrow{display:inline-flex;align-items:center;gap:6px;
+      background:var(--violet-soft);color:var(--violet);border-radius:20px;
+      padding:4px 12px;font-size:0.69rem;font-weight:500;margin-bottom:0.5rem;
+      border:1px solid rgba(108,63,240,0.18);width:fit-content}
+    .panel-eyebrow::before{content:'';width:5px;height:5px;background:var(--violet);
+      border-radius:50%;animation:blink 1.5s ease-in-out infinite}
+    .panel-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;
+      letter-spacing:-0.025em;color:var(--ink);margin-bottom:0.2rem}
+    .panel-sub{font-size:0.77rem;color:var(--muted);line-height:1.5;margin-bottom:1.25rem}
+    .field-label{font-size:0.73rem;font-weight:500;color:var(--ink2);margin-bottom:6px;display:block}
+    /* MODEL DROPDOWN */
+    .model-field{position:relative;margin-bottom:1.1rem}
+    .model-input-wrap{position:relative}
+    .srch-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);
+      color:var(--muted);font-size:0.8rem;pointer-events:none;z-index:1}
+    .clear-ico{position:absolute;right:11px;top:50%;transform:translateY(-50%);
+      color:var(--muted);font-size:0.85rem;cursor:pointer;display:none;z-index:1;transition:color 0.15s}
+    .clear-ico:hover{color:var(--violet)}
+    .model-text-input{width:100%;padding:10px 34px 10px 34px;font-size:0.82rem;
+      border:1.5px solid var(--border);border-radius:var(--radius-sm);
+      background:var(--surface);color:var(--ink);outline:none;
+      transition:border-color 0.15s,box-shadow 0.15s;
+      font-family:'DM Sans',sans-serif;cursor:pointer}
+    .model-text-input:focus,.model-text-input.open{border-color:var(--violet);
+      background:#fff;box-shadow:0 0 0 3px rgba(108,63,240,0.08);
+      border-radius:var(--radius-sm) var(--radius-sm) 0 0}
+    .model-dropdown{position:absolute;top:100%;left:0;right:0;
+      background:#fff;border:1.5px solid var(--violet);border-top:none;
+      border-radius:0 0 var(--radius-sm) var(--radius-sm);
+      box-shadow:0 8px 24px rgba(108,63,240,0.12);z-index:200;
+      max-height:180px;overflow-y:auto;display:none;
+      scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+    .model-dropdown.open{display:block}
+    .model-dropdown::-webkit-scrollbar{width:4px}
+    .model-dropdown::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+    .model-option{padding:9px 13px;font-size:0.81rem;color:var(--ink);
+      cursor:pointer;transition:background 0.1s;display:flex;align-items:center;gap:8px}
+    .model-option:hover{background:var(--violet-soft);color:var(--violet)}
+    .model-option.selected{background:var(--violet);color:#fff}
+    .model-option.hidden{display:none}
+    .car-ico{font-size:0.75rem;opacity:0.6}
+    .model-option.selected .car-ico{opacity:0.85}
+    .no-results{padding:12px 13px;font-size:0.78rem;color:var(--muted);text-align:center;display:none}
+    #carModelSelect{display:none}
+    /* DROP ZONE */
+    .drop-zone{border:2px dashed var(--border);border-radius:var(--radius);
+      cursor:pointer;transition:all 0.2s;background:var(--surface);
+      position:relative;overflow:hidden;min-height:190px;
+      display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .drop-zone:hover,.drop-zone.drag-over{border-color:var(--violet);background:var(--violet-soft)}
+    .drop-zone.has-image{border-style:solid;border-color:var(--teal);background:#000;min-height:210px}
+    .drop-inner{display:flex;flex-direction:column;align-items:center;
+      justify-content:center;gap:10px;padding:1.75rem 1rem;text-align:center}
+    .drop-icon-wrap{width:58px;height:58px;
+      background:linear-gradient(135deg,var(--violet-soft),#e0d8ff);
+      border:1.5px solid rgba(108,63,240,0.2);border-radius:15px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.45rem;color:var(--violet);margin-bottom:4px}
+    .drop-title{font-size:0.87rem;font-weight:500;color:var(--ink)}
+    .drop-sub{font-size:0.71rem;color:var(--muted);margin-top:3px}
+    .drop-badge{display:none;position:absolute;top:10px;right:10px;
+      align-items:center;gap:5px;background:var(--teal);color:#fff;
+      font-size:0.67rem;padding:4px 11px;border-radius:20px;z-index:2}
+    .drop-preview{width:100%;height:100%;min-height:210px;
+      object-fit:cover;display:none;opacity:0.85}
+    .drop-change-hint{display:none;position:absolute;bottom:10px;left:50%;
+      transform:translateX(-50%);background:rgba(0,0,0,0.55);color:#fff;
+      font-size:0.67rem;padding:4px 12px;border-radius:20px;
+      white-space:nowrap;backdrop-filter:blur(4px)}
+    .drop-zone.has-image:hover .drop-change-hint{display:block}
+    /* BUTTON */
+    .detect-btn{width:100%;padding:13px;
+      background:linear-gradient(135deg,var(--violet),var(--violet-mid));
+      color:#fff;border:none;border-radius:var(--radius-sm);
+      font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;
+      cursor:pointer;margin-top:1rem;transition:all 0.2s;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      box-shadow:0 4px 18px rgba(115, 68, 255, 0.32);letter-spacing:0.01em}
+    .detect-btn:hover:not(:disabled){transform:translateY(-2px);
+      box-shadow:0 8px 28px rgba(116, 70, 255, 0.44)}
+    .detect-btn:active:not(:disabled){transform:translateY(0)}
+    .detect-btn:disabled{background:#d1cde8;cursor:not-allowed;color:#a09bb8;box-shadow:none}
+    /* SCAN OVERLAY */
+    #scanOverlay{display:none;position:fixed;inset:0;background:rgba(26,22,37,0.94);
+      z-index:9999;align-items:center;justify-content:center;flex-direction:column}
+    #scanOverlay.active{display:flex}
+    .scan-box{text-align:center;color:#fff;max-width:360px;width:90%}
+    .scan-frame-wrap{position:relative;display:inline-block;
+      margin:1.1rem auto;border-radius:var(--radius);overflow:hidden}
+    .scan-frame-wrap img{width:260px;height:180px;object-fit:cover;display:block;
+      border-radius:var(--radius);filter:brightness(0.7)}
+    .scan-line{position:absolute;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,transparent 0%,var(--violet) 30%,#a78bfa 50%,var(--violet) 70%,transparent 100%);
+      top:0;animation:scanMove 2.2s ease-in-out infinite;
+      box-shadow:0 0 14px 3px rgba(115, 68, 255, 0.6)}
+    .scan-corner{position:absolute;width:17px;height:17px;border-color:var(--violet-mid);border-style:solid}
+    .scan-corner.tl{top:4px;left:4px;border-width:2px 0 0 2px;border-radius:3px 0 0 0}
+    .scan-corner.tr{top:4px;right:4px;border-width:2px 2px 0 0;border-radius:0 3px 0 0}
+    .scan-corner.bl{bottom:4px;left:4px;border-width:0 0 2px 2px;border-radius:0 0 0 3px}
+    .scan-corner.br{bottom:4px;right:4px;border-width:0 2px 2px 0;border-radius:0 0 3px 0}
+    @keyframes scanMove{0%{top:0}50%{top:calc(100% - 2px)}100%{top:0}}
+    .scan-title{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:4px}
+    .scan-sub{font-size:0.75rem;color:rgba(255,255,255,0.42);margin-bottom:1.1rem}
+    .scan-steps{list-style:none;text-align:left}
+    .scan-step{display:flex;align-items:center;gap:10px;padding:6px 0;
+      font-size:0.8rem;color:rgba(255,255,255,0.3);transition:color 0.3s}
+    .scan-step.active{color:rgba(255,255,255,0.9)}
+    .scan-step.done{color:rgba(255,255,255,0.48)}
+    .step-icon{width:21px;height:21px;border-radius:50%;
+      border:1.5px solid rgba(255,255,255,0.14);display:flex;align-items:center;
+      justify-content:center;flex-shrink:0;font-size:9px;transition:all 0.3s}
+    .scan-step.active .step-icon{border-color:var(--violet-mid);background:rgba(108,63,240,0.2);color:#c4b5fd}
+    .scan-step.done .step-icon{border-color:var(--teal);background:rgba(15,168,130,0.14);color:#34d399}
+    .scan-bar-wrap{margin-top:1.1rem;background:rgba(255,255,255,0.1);border-radius:4px;height:3px;overflow:hidden}
+    .scan-bar{height:100%;background:linear-gradient(90deg,var(--violet),#a78bfa);
+      border-radius:4px;width:0%;transition:width 0.4s ease}
+    footer{background:rgba(26,22,37,0.9);color:rgba(255,255,255,0.42);
+      padding:11px 2rem;font-size:0.7rem;text-align:center;backdrop-filter:blur(8px)}
+    footer strong{color:rgba(255,255,255,0.75)}
+    /* TABLET */
+    @media(max-width:860px){
+      .main-card{grid-template-columns:1fr;max-width:520px}
+      .card-left{border-right:none;border-bottom:1.5px solid var(--border);
+        border-radius:var(--radius) var(--radius) 0 0;padding:2rem}
+      .card-right{border-radius:0 0 var(--radius) var(--radius);padding:2rem}
+      .stat-chips{grid-template-columns:repeat(4,1fr)}
+      .hero-h1{font-size:1.8rem}
+    }
+    /* MOBILE */
+    @media(max-width:540px){
+      .ah-header{padding:0 1rem}
+      .ah-nav{gap:0.85rem}
+      .ah-nav li:nth-child(3),.ah-nav li:nth-child(4){display:none}
+      .page-wrap{padding:1rem 0.75rem}
+      .main-card{max-width:100%;border-radius:16px}
+      .card-left{padding:1.5rem 1.25rem;border-radius:16px 16px 0 0}
+      .card-right{padding:1.5rem 1.25rem;border-radius:0 0 16px 16px}
+      .hero-h1{font-size:1.5rem}
+      .hero-sub{font-size:0.79rem}
+      .stat-chips{grid-template-columns:repeat(2,1fr);gap:7px}
+      .stat-chip{padding:9px 10px}
+      .drop-zone{min-height:150px}
+      .drop-zone.has-image{min-height:170px}
+      .panel-title{font-size:1.1rem}
+    }
+    @media(max-width:360px){
+      .hero-sub{display:none}
+      .stat-chips{grid-template-columns:repeat(4,1fr)}
+      .stat-chip .l{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<header class="ah-header">
+  <a href="{% url 'home' %}" class="ah-logo">Auto<span>Healz</span>.</a>
+  <ul class="ah-nav">
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</header>
+
+<div id="scanOverlay">
+  <div class="scan-box">
+    <div class="scan-title">Analysing your car</div>
+    <div class="scan-sub">AI detecting damage and calculating repair cost</div>
+    <div class="scan-frame-wrap">
+      <img id="scanPreviewImg" src="" alt="scanning">
+      <div class="scan-line"></div>
+      <div class="scan-corner tl"></div><div class="scan-corner tr"></div>
+      <div class="scan-corner bl"></div><div class="scan-corner br"></div>
+    </div>
+    <ul class="scan-steps">
+      <li class="scan-step" id="ss1"><div class="step-icon" id="si1"><i class="bi bi-cloud-arrow-up"></i></div>Uploading image</li>
+      <li class="scan-step" id="ss2"><div class="step-icon" id="si2"><i class="bi bi-cpu"></i></div>Running  detection</li>
+      <li class="scan-step" id="ss3"><div class="step-icon" id="si3"><i class="bi bi-diagram-3"></i></div>Mapping damage severity </li>
+      <li class="scan-step" id="ss4"><div class="step-icon" id="si4"><i class="bi bi-calculator"></i></div>Calculating cost + GST</li>
+    </ul>
+    <div class="scan-bar-wrap"><div class="scan-bar" id="scanBar"></div></div>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="main-card">
+
+    <div class="card-left">
+      <div class="hero-tag"><i class="bi bi-stars"></i> Cost Estimator</div>
+      <h1 class="hero-h1"> Car<br><span>Damage</span><br>Detection</h1>
+      <p class="hero-sub">Upload a photo of your Maruti Suzuki. Our System detects damage, classifies severity &amp; gives a full repair estimate including Labour + GST — in seconds.</p>
+      <div class="stat-chips">
+        <div class="stat-chip"><div class="n">18+</div><div class="l">Maruti models</div></div>
+        <div class="stat-chip"><div class="n">SMART</div><div class="l">Severity model</div></div>
+        <div class="stat-chip"><div class="n">+30%</div><div class="l">Labour + GST</div></div>
+        <div class="stat-chip"><div class="n">VISION </div><div class="l">Detection AI</div></div>
+      </div>
+    </div>
+
+    <div class="card-right">
+      <div class="panel-eyebrow"><i class="bi bi-lightning-charge-fill"></i> Get Your Estimate</div>
+      <div class="panel-title">Damage Cost Estimator</div>
+      <p class="panel-sub">Select your car model and upload a clear damage photo.</p>
+
+      <form method="post" enctype="multipart/form-data" id="estimateForm">
+        {% csrf_token %}
+
+        <div style="margin-bottom:1.1rem;">
+          <label class="field-label"><i class="bi bi-car-front me-1"></i> Select your car model</label>
+          <div class="model-field" id="modelField">
+            <div class="model-input-wrap">
+              <i class="bi bi-search srch-ico"></i>
+              <input type="text" id="modelTextInput" class="model-text-input"
+                placeholder="Search — Swift, Baleno, Brezza…" autocomplete="off" readonly>
+              <i class="bi bi-x-lg clear-ico" id="clearModel"></i>
+            </div>
+            <div class="model-dropdown" id="modelDropdown">
+              {% for m in supported_models %}
+                <div class="model-option" data-value="{{ m }}">
+                  <i class="bi bi-car-front-fill car-ico"></i> Maruti Suzuki {{ m }}
+                </div>
+              {% endfor %}
+              <div class="no-results" id="noResults">No models found</div>
+            </div>
+          </div>
+          <select name="car_model" id="carModelSelect" required>
+            <option value="">-- select --</option>
+            {% for m in supported_models %}
+              <option value="{{ m }}" {% if m == car_model %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+          </select>
+          <small style="font-size:0.63rem;color:var(--muted);display:block;margin-top:4px;">{{ supported_models|length }} models supported</small>
+        </div>
+
+        <label class="field-label"><i class="bi bi-image me-1"></i> Upload damage photo</label>
+        <div class="drop-zone" id="dropZone"
+          ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)"
+          ondrop="handleDrop(event)"
+          onclick="document.getElementById('imageUpload').click()">
+          <div class="drop-inner" id="dropInner">
+            <div class="drop-icon-wrap"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+            <div>
+              <div class="drop-title">Click or drag to upload photo</div>
+              <div class="drop-sub">JPG / PNG &middot; Clear view of damaged area</div>
+            </div>
+          </div>
+          <div class="drop-badge" id="dropBadge"><i class="bi bi-check-circle-fill"></i>&nbsp;Photo ready</div>
+          <img id="imagePreview" class="drop-preview" alt="preview">
+          <div class="drop-change-hint"><i class="bi bi-arrow-repeat"></i> Click to change photo</div>
+          <input type="file" name="image" id="imageUpload" accept="image/*" hidden required>
+        </div>
+
+        <button type="submit" class="detect-btn" id="detectBtn" disabled>
+          <i class="bi bi-search"></i> Detect Damage &amp; Estimate Cost
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+  <footer id="footer" class="footer dark-background">
+
+    <div class="container">
+      <div class="row gy-5">
+
+        <div class="col-lg-4">
+          <div class="footer-content">
+            <a href="index.html" class="logo d-flex align-items-center mb-4">
+              <span class="sitename">AutoHealz</span>
+            </a>
+            <p>At AutoHealz, we bring innovation to car care. Our AI-driven system simplifies damage detection and cost estimation, making your repair experience faster, smarter, and more transparent.</p>
+            <p class="mb-4"></p>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-6">
+          <div class="footer-links">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> About Us</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> Services</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> faq</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> Contact Us</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right"></i> Reviews</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="footer-contact">
+            <h4>Get in Touch</h4>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="bi bi-geo-alt"></i>
+              </div>
+              <div class="contact-info">
+                <p>Pimpri Chichwad 411017</p>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="bi bi-telephone"></i>
+              </div>
+              <div class="contact-info">
+                <p>+91 8928856280</p>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="bi bi-envelope"></i>
+              </div>
+              <div class="contact-info">
+                <p>AutoHealz@gmail.com</p>
+              </div>
+            </div>
+
+            <div class="social-links">
+              <a href="#"><i class="bi bi-facebook"></i></a>
+              <a href="#"><i class="bi bi-twitter-x"></i></a>
+              <a href="#"><i class="bi bi-linkedin"></i></a>
+              <a href="#"><i class="bi bi-youtube"></i></a>
+              <a href="#"><i class="bi bi-github"></i></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <div class="copyright">
+              <p>© <span>Copyright</span> <strong class="px-1 sitename">Autohealz</strong> <span>All Rights Reserved</span></p>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="footer-bottom-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Cookie Policy</a>
+            </div>
+            <div class="credits">
+              Designed by <a href="https://bootstrapmade.com/">Sakshi Kaspate.</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </footer>
+
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+  let hasImage = false, hasModel = false;
+
+  document.getElementById('imageUpload').addEventListener('change', function() {
+    const file = this.files[0]; if (!file) return; readFile(file);
+  });
+  function readFile(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const p = document.getElementById('imagePreview');
+      p.src = e.target.result; p.style.display = 'block';
+      document.getElementById('scanPreviewImg').src = e.target.result;
+      document.getElementById('dropBadge').style.display = 'inline-flex';
+      document.getElementById('dropZone').classList.add('has-image');
+      document.getElementById('dropInner').style.display = 'none';
+      hasImage = true; updateBtn();
+    };
+    reader.readAsDataURL(file);
+  }
+  function handleDragOver(e){e.preventDefault();document.getElementById('dropZone').classList.add('drag-over')}
+  function handleDragLeave(){document.getElementById('dropZone').classList.remove('drag-over')}
+  function handleDrop(e){
+    e.preventDefault();document.getElementById('dropZone').classList.remove('drag-over');
+    const file=e.dataTransfer.files[0];
+    if(!file||!file.type.startsWith('image/'))return;
+    const dt=new DataTransfer();dt.items.add(file);
+    document.getElementById('imageUpload').files=dt.files;readFile(file);
+  }
+
+  const modelTextInput = document.getElementById('modelTextInput');
+  const modelDropdown  = document.getElementById('modelDropdown');
+  const clearBtn       = document.getElementById('clearModel');
+  const realSelect     = document.getElementById('carModelSelect');
+  const noResults      = document.getElementById('noResults');
+  const allOptions     = document.querySelectorAll('.model-option');
+
+  function openDropdown(){
+    modelDropdown.classList.add('open');
+    modelTextInput.classList.add('open');
+    modelTextInput.removeAttribute('readonly');
+    modelTextInput.focus();
+    if(realSelect.value) modelTextInput.select();
+  }
+  function closeDropdown(){
+    modelDropdown.classList.remove('open');
+    modelTextInput.classList.remove('open');
+    modelTextInput.setAttribute('readonly',true);
+    allOptions.forEach(o=>o.classList.remove('hidden'));
+    noResults.style.display='none';
+    modelTextInput.value = realSelect.value ? 'Maruti Suzuki '+realSelect.value : '';
+    clearBtn.style.display = realSelect.value ? 'block' : 'none';
+  }
+  modelTextInput.addEventListener('click',function(e){
+    e.stopPropagation();
+    modelDropdown.classList.contains('open') ? closeDropdown() : openDropdown();
+  });
+  modelTextInput.addEventListener('input',function(){
+    const q=this.value.toLowerCase(); let v=0;
+    allOptions.forEach(o=>{const m=o.textContent.toLowerCase().includes(q);o.classList.toggle('hidden',!m);if(m)v++;});
+    noResults.style.display=v===0?'block':'none';
+  });
+  allOptions.forEach(opt=>{
+    opt.addEventListener('mousedown',function(e){
+      e.preventDefault();
+      const val=this.dataset.value;
+      realSelect.value=val;
+      modelTextInput.value='Maruti Suzuki '+val;
+      clearBtn.style.display='block';
+      allOptions.forEach(o=>o.classList.remove('selected'));
+      this.classList.add('selected');
+      closeDropdown();
+      hasModel=true; updateBtn();
+    });
+  });
+  clearBtn.addEventListener('click',function(e){
+    e.stopPropagation();
+    realSelect.value=''; modelTextInput.value='';
+    clearBtn.style.display='none';
+    allOptions.forEach(o=>o.classList.remove('selected','hidden'));
+    noResults.style.display='none';
+    hasModel=false; updateBtn(); closeDropdown();
+  });
+  document.addEventListener('click',function(e){
+    if(!document.getElementById('modelField').contains(e.target)) closeDropdown();
+  });
+
+  function updateBtn(){document.getElementById('detectBtn').disabled=!(hasImage&&hasModel)}
+
+  document.getElementById('estimateForm').addEventListener('submit',function(){
+    document.getElementById('scanOverlay').classList.add('active');
+    runScanAnimation();
+  });
+  function runScanAnimation(){
+    const steps=[{id:'ss1',dot:'si1',pct:20},{id:'ss2',dot:'si2',pct:50},{id:'ss3',dot:'si3',pct:75},{id:'ss4',dot:'si4',pct:100}];
+    const delays=[0,800,1800,3000];
+    steps.forEach((s,i)=>{
+      setTimeout(()=>{
+        document.getElementById(s.id).classList.add('active');
+        document.getElementById(s.dot).innerHTML='<span style="width:7px;height:7px;background:#a78bfa;border-radius:50%;animation:blink 0.6s infinite"></span>';
+        document.getElementById('scanBar').style.width=s.pct+'%';
+        if(i>0){const p=steps[i-1];document.getElementById(p.id).classList.remove('active');document.getElementById(p.id).classList.add('done');document.getElementById(p.dot).innerHTML='<i class="bi bi-check" style="color:#34d399;font-size:11px"></i>';}
+      },delays[i]);
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded',()=>{
+    const val=realSelect.value;
+    if(val){
+      modelTextInput.value='Maruti Suzuki '+val;
+      clearBtn.style.display='block';
+      allOptions.forEach(o=>{if(o.dataset.value===val)o.classList.add('selected');});
+      hasModel=true; updateBtn();
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,606 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoHealz — Create Account</title>
+  <link href="{% static 'assets/img/logo1.jpg' %}" rel="icon">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    :root {
+      --orange: #ff7a00; --orange-dark: #cc5e00; --blue: #006eff;
+      --dark: #0d0d0d; --card-bg: #ffffff; --muted: #6b7280;
+      --border: #e5e7eb; --input-bg: #f9fafb;
+      --green: #27ae60; --red: #e74c3c;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #f0f2f5; min-height: 100vh; }
+    .auth-wrap { display: flex; min-height: calc(100vh - 70px); }
+
+    .auth-panel-left {
+      flex: 1; background: linear-gradient(145deg, #0a0a14 0%, #111827 60%, #001a40 100%);
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+      padding: 60px 56px; position: relative; overflow: hidden;
+    }
+    .auth-panel-left::before { content: ''; position: absolute; top: -100px; right: -100px; width: 380px; height: 380px; border-radius: 50%; background: radial-gradient(circle, rgba(0,110,255,0.2) 0%, transparent 70%); }
+    .auth-panel-left::after  { content: ''; position: absolute; bottom: -60px; left: -60px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, rgba(255,122,0,0.12) 0%, transparent 70%); }
+    .left-brand { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 6px; position: relative; z-index: 1; }
+    .left-brand span { color: var(--orange); }
+    .left-tagline { font-size: 14px; color: rgba(255,255,255,0.45); margin-bottom: 40px; position: relative; z-index: 1; }
+    .left-steps { position: relative; z-index: 1; }
+    .left-step { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 28px; }
+    .step-num-circle { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,110,255,0.2); border: 1px solid rgba(0,110,255,0.4); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: #6eb8ff; flex-shrink: 0; margin-top: 2px; }
+    .left-step-text strong { display: block; font-size: 13px; font-weight: 600; color: #fff; }
+    .left-step-text span { font-size: 12px; color: rgba(255,255,255,0.4); }
+    .left-car-graphic { position: absolute; bottom: 24px; right: -20px; font-size: 130px; opacity: 0.05; z-index: 0; }
+
+    .auth-panel-right { width: 500px; background: var(--card-bg); display: flex; align-items: center; justify-content: center; padding: 40px 48px; overflow-y: auto; }
+    .auth-form-wrap { width: 100%; }
+    .auth-heading { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+    .auth-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+    .msg-error   { background: #fff0ee; border: 1px solid #ffb3a7; color: #c0392b; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .msg-success { background: #eafaf1; border: 1px solid #a9dfbf; color: #1e8449; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+
+    .field-group { margin-bottom: 16px; }
+    .field-group label { display: block; font-size: 11px; font-weight: 600; color: #374151; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .input-wrap { position: relative; }
+    .input-wrap .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 15px; pointer-events: none; }
+    .input-wrap input { width: 100%; padding: 11px 42px 11px 40px; background: var(--input-bg); border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--dark); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .input-wrap input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,110,255,0.1); background: #fff; }
+    .input-wrap input.is-invalid { border-color: var(--red);   box-shadow: 0 0 0 3px rgba(231,76,60,0.08); }
+    .input-wrap input.is-valid   { border-color: var(--green); box-shadow: 0 0 0 3px rgba(39,174,96,0.08); }
+
+    /* Spinner / tick indicator inside input */
+    .input-status {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      font-size: 15px; pointer-events: none;
+    }
+    .input-status.checking { color: #f39c12; animation: spin 0.8s linear infinite; }
+    .input-status.valid    { color: var(--green); }
+    .input-status.invalid  { color: var(--red); }
+    @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+    .toggle-pw { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #9ca3af; font-size: 15px; padding: 2px; }
+    .toggle-pw:hover { color: var(--blue); }
+
+    .field-err-msg  { font-size: 11px; color: var(--red);   margin-top: 4px; display: block; min-height: 14px; }
+    .field-ok-msg   { font-size: 11px; color: var(--green); margin-top: 4px; display: block; min-height: 14px; }
+
+    .pw-strength-bar { display: flex; gap: 4px; margin-top: 6px; }
+    .pw-strength-bar .bar { flex: 1; height: 3px; border-radius: 2px; background: #e5e7eb; transition: background 0.3s; }
+    .pw-strength-bar .bar.weak   { background: #e74c3c; }
+    .pw-strength-bar .bar.fair   { background: #f39c12; }
+    .pw-strength-bar .bar.good   { background: #27ae60; }
+    .pw-strength-bar .bar.strong { background: #1abc9c; }
+    .pw-strength-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    .terms-check { display: flex; align-items: flex-start; gap: 10px; margin: 16px 0 20px; font-size: 12px; color: var(--muted); }
+    .terms-check input[type="checkbox"] { margin-top: 2px; accent-color: var(--blue); width: 15px; height: 15px; cursor: pointer; flex-shrink: 0; }
+    .terms-check a { color: var(--blue); text-decoration: none; cursor: pointer; }
+    .terms-check a:hover { text-decoration: underline; }
+
+    .btn-auth { width: 100%; padding: 13px; background: var(--blue); border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: #fff; cursor: pointer; letter-spacing: 0.3px; transition: background 0.2s, transform 0.1s, box-shadow 0.2s; box-shadow: 0 4px 16px rgba(0,110,255,0.3); }
+    .btn-auth:hover:not(:disabled) { background: #0057d4; box-shadow: 0 6px 20px rgba(0,110,255,0.4); transform: translateY(-1px); }
+    .btn-auth:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .auth-divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; color: #d1d5db; font-size: 12px; }
+    .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .auth-switch { text-align: center; font-size: 13px; color: var(--muted); }
+    .auth-switch a { color: var(--orange); font-weight: 600; text-decoration: none; }
+    .auth-switch a:hover { text-decoration: underline; }
+
+    @media (max-width: 900px) { .auth-panel-left { display: none; } .auth-panel-right { width: 100%; padding: 40px 24px; } }
+
+    /* ── MODAL STYLES ── */
+    .tm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 9000; align-items: center; justify-content: center; padding: 20px; }
+    .tm-overlay.open { display: flex; }
+    .tm-modal { background: #fff; border-radius: 20px; width: 640px; max-width: 100%; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 24px 80px rgba(0,0,0,0.2); animation: modal-in 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes modal-in { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .tm-header { padding: 24px 28px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .tm-header h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--dark); }
+    .tm-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #9ca3af; padding: 4px; line-height: 1; }
+    .tm-close:hover { color: var(--dark); }
+    .tm-tabs { display: flex; gap: 4px; padding: 12px 28px; border-bottom: 1px solid #f0f0f0; flex-shrink: 0; }
+    .tm-tab { padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: none; color: var(--muted); transition: all 0.2s; }
+    .tm-tab.active { background: var(--blue); color: #fff; }
+    .tm-tab:hover:not(.active) { background: #f0f2f5; }
+    .tm-body { padding: 24px 28px; overflow-y: auto; flex: 1; }
+    .tm-body h4 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--dark); margin: 20px 0 8px; }
+    .tm-body h4:first-child { margin-top: 0; }
+    .tm-body p  { font-size: 13px; color: #374151; line-height: 1.75; margin-bottom: 12px; }
+    .tm-body ul { padding-left: 18px; margin-bottom: 12px; }
+    .tm-body ul li { font-size: 13px; color: #374151; line-height: 1.75; margin-bottom: 4px; }
+    .tm-footer { padding: 16px 28px; border-top: 1px solid #f0f0f0; display: flex; gap: 10px; flex-shrink: 0; }
+    .tm-accept-btn  { flex: 1; padding: 11px; background: var(--blue); border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; transition: background 0.2s; }
+    .tm-accept-btn:hover { background: #0057d4; }
+    .tm-decline-btn { padding: 11px 20px; background: none; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+    .tm-decline-btn:hover { border-color: #aaa; color: var(--dark); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+      <a href="{% url 'home' %}" class="logo d-flex align-items-center me-auto me-xl-0">
+        <h1 class="sitename">AutoHealz</h1><span>.</span>
+      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="auth-wrap">
+
+      <!-- LEFT PANEL -->
+      <div class="auth-panel-left">
+        <div class="left-brand">Auto<span>Healz</span></div>
+        <div class="left-tagline">Join thousands of car owners who trust us.</div>
+        <div class="left-steps">
+          <div class="left-step">
+            <div class="step-num-circle">1</div>
+            <div class="left-step-text"><strong>Create your account</strong><span>Takes less than 60 seconds</span></div>
+          </div>
+          <div class="left-step">
+            <div class="step-num-circle">2</div>
+            <div class="left-step-text"><strong>Upload a car photo</strong><span>Our AI detects damage instantly</span></div>
+          </div>
+          <div class="left-step">
+            <div class="step-num-circle">3</div>
+            <div class="left-step-text"><strong>Get your cost estimate</strong><span>Transparent pricing with GST breakdown</span></div>
+          </div>
+          <div class="left-step">
+            <div class="step-num-circle">4</div>
+            <div class="left-step-text"><strong>Book an appointment</strong><span>Pick your slot, we'll handle the rest</span></div>
+          </div>
+        </div>
+        <div class="left-car-graphic">🚘</div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="auth-panel-right">
+        <div class="auth-form-wrap">
+
+          <div class="auth-heading">Create account ✨</div>
+          <div class="auth-sub">It's free and only takes a minute</div>
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="{% if message.tags == 'error' %}msg-error{% else %}msg-success{% endif %}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="POST" action="{% url 'sign' %}" id="signForm" novalidate>
+            {% csrf_token %}
+
+            <!-- USERNAME -->
+            <div class="field-group">
+              <label for="username">Username</label>
+              <div class="input-wrap">
+                <i class="bi bi-person input-icon"></i>
+                <input type="text"
+                       id="username" name="username"
+                       placeholder="Choose a username"
+                       value="{{ old.username|default:'' }}"
+                       class="{% if errors.username %}is-invalid{% endif %}"
+                       autocomplete="off">
+                <span class="input-status" id="usernameStatus"></span>
+              </div>
+              <span class="field-err-msg" id="usernameErr">{{ errors.username|default:'' }}</span>
+              <span class="field-ok-msg"  id="usernameOk"  style="display:none;">✓ Username is available</span>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="field-group">
+              <label for="email">Email Address</label>
+              <div class="input-wrap">
+                <i class="bi bi-envelope input-icon"></i>
+                <input type="email"
+                       id="email" name="email"
+                       placeholder="you@example.com"
+                       value="{{ old.email|default:'' }}"
+                       class="{% if errors.email %}is-invalid{% endif %}"
+                       autocomplete="off">
+                <span class="input-status" id="emailStatus"></span>
+              </div>
+              <span class="field-err-msg" id="emailErr">{{ errors.email|default:'' }}</span>
+              <span class="field-ok-msg"  id="emailOk"  style="display:none;">✓ Email is available</span>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="field-group">
+              <label for="password">Password</label>
+              <div class="input-wrap">
+                <i class="bi bi-lock input-icon"></i>
+                <input type="password" id="password" name="password"
+                       placeholder="Min. 6 characters"
+                       class="{% if errors.password %}is-invalid{% endif %}"
+                       oninput="checkStrength(this.value)">
+                <button type="button" class="toggle-pw" id="togglePw1"><i class="bi bi-eye"></i></button>
+              </div>
+              <div class="pw-strength-bar">
+                <div class="bar" id="bar1"></div>
+                <div class="bar" id="bar2"></div>
+                <div class="bar" id="bar3"></div>
+                <div class="bar" id="bar4"></div>
+              </div>
+              <div class="pw-strength-label" id="strengthLabel"></div>
+              <span class="field-err-msg">{{ errors.password|default:'' }}</span>
+            </div>
+
+            <!-- CONFIRM PASSWORD -->
+            <div class="field-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <div class="input-wrap">
+                <i class="bi bi-lock-fill input-icon"></i>
+                <input type="password" id="confirmPassword" name="confirmPassword"
+                       placeholder="Re-enter your password"
+                       class="{% if errors.confirm %}is-invalid{% endif %}">
+                <button type="button" class="toggle-pw" id="togglePw2"><i class="bi bi-eye"></i></button>
+              </div>
+              <span class="field-err-msg" id="confirmErr">{{ errors.confirm|default:'' }}</span>
+            </div>
+
+            <!-- Terms checkbox -->
+            <div class="terms-check">
+              <input type="checkbox" id="terms">
+              <label for="terms">
+                I have read and agree to the
+                <a onclick="openModal('terms')">Terms of Service</a> and
+                <a onclick="openModal('privacy')">Privacy Policy</a>
+              </label>
+            </div>
+
+            <button type="submit" class="btn-auth" id="submitBtn">Create My Account</button>
+
+            <div class="auth-divider">Already registered?</div>
+            <div class="auth-switch">Already have an account? <a href="{% url 'login' %}">Sign in here →</a></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ══════════ TERMS & PRIVACY MODAL ══════════ -->
+  <div class="tm-overlay" id="tmOverlay" onclick="overlayClick(event)">
+    <div class="tm-modal" id="tmModal">
+      <div class="tm-header">
+        <h3 id="tmTitle">Terms of Service</h3>
+        <button class="tm-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="tm-tabs">
+        <button class="tm-tab active" id="tabTerms"   onclick="switchTab('terms')">Terms of Service</button>
+        <button class="tm-tab"        id="tabPrivacy" onclick="switchTab('privacy')">Privacy Policy</button>
+      </div>
+      <div class="tm-body">
+        <!-- TERMS OF SERVICE -->
+        <div class="tab-content active" id="contentTerms">
+          <h4>1. Acceptance of Terms</h4>
+          <p>By creating an account on AutoHealz, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you may not use our services.</p>
+          <h4>2. Description of Service</h4>
+          <p>AutoHealz provides an AI-powered car damage detection and cost estimation platform specifically designed for Maruti Suzuki vehicles. Our services include:</p>
+          <ul>
+            <li>AI-based damage analysis from uploaded photographs</li>
+            <li>Repair cost estimation including parts, labour, and GST</li>
+            <li>Part availability lookup (original and substitute)</li>
+            <li>Appointment booking for car repair services</li>
+          </ul>
+          <h4>3. User Accounts</h4>
+          <p>You are responsible for maintaining the confidentiality of your account credentials. You must notify us immediately of any unauthorized access. You are responsible for all activities that occur under your account.</p>
+          <h4>4. Acceptable Use</h4>
+          <ul>
+            <li>Not uploading inappropriate, offensive, or irrelevant images</li>
+            <li>Not attempting to reverse-engineer or tamper with our AI models</li>
+            <li>Not using the platform for any unlawful purpose</li>
+            <li>Not creating multiple accounts to circumvent restrictions</li>
+          </ul>
+          <h4>5. Accuracy of Estimates</h4>
+          <p>Cost estimates are approximate and generated by machine learning models. Actual repair costs may vary. These should be used as a reference guide only and do not constitute a formal quotation.</p>
+          <h4>6. Appointments</h4>
+          <p>Appointment bookings are subject to availability. AutoHealz reserves the right to reschedule or cancel appointments. Users will be notified in advance of any changes.</p>
+          <h4>7. Intellectual Property</h4>
+          <p>All content, technology, and AI models on AutoHealz are the intellectual property of AutoHealz and its developers. You may not copy, reproduce, or distribute any part of our platform without written permission.</p>
+          <h4>8. Limitation of Liability</h4>
+          <p>AutoHealz shall not be liable for any indirect, incidental, or consequential damages arising from use of our services.</p>
+          <h4>9. Changes to Terms</h4>
+          <p>We may update these Terms from time to time. Continued use of the service after changes constitutes acceptance of the new terms.</p>
+          <h4>10. Contact</h4>
+          <p>For any questions: AutoHealz@gmail.com | +91 8928856280</p>
+          <p style="color:#999;font-size:12px;">Last updated: January 2025 · AutoHealz, Pimpri Chichwad 411017</p>
+        </div>
+        <!-- PRIVACY POLICY -->
+        <div class="tab-content" id="contentPrivacy">
+          <h4>1. Information We Collect</h4>
+          <ul>
+            <li><strong>Account Data:</strong> Username, email address, and encrypted password</li>
+            <li><strong>Usage Data:</strong> Car model selections, uploaded images, and analysis results</li>
+            <li><strong>Appointment Data:</strong> Name, phone number, vehicle details, and booking information</li>
+            <li><strong>Device Data:</strong> Browser type, IP address, and session information</li>
+          </ul>
+          <h4>2. How We Use Your Information</h4>
+          <ul>
+            <li>Provide and improve our AI damage detection services</li>
+            <li>Process and confirm appointment bookings</li>
+            <li>Send service-related communications</li>
+            <li>Improve the accuracy of our cost estimation models</li>
+            <li>Maintain platform security and prevent fraud</li>
+          </ul>
+          <h4>3. Image Data</h4>
+          <p>Photographs are processed by our AI models to detect vehicle damage. Images may be temporarily stored for processing. We do not share your vehicle images with third parties.</p>
+          <h4>4. Data Security</h4>
+          <p>We implement industry-standard security measures including password hashing, secure session management, and HTTPS encryption.</p>
+          <h4>5. Data Sharing</h4>
+          <p>We do not sell, trade, or rent your personal information. We may share data with service providers assisting in operating our platform and legal authorities when required by law.</p>
+          <h4>6. Your Rights</h4>
+          <p>You have the right to access, correct, or delete your personal data. Contact us at AutoHealz@gmail.com. Account deletion requests will be processed within 30 days.</p>
+          <h4>7. Contact Us</h4>
+          <p>AutoHealz@gmail.com | +91 8928856280 | Pimpri Chichwad 411017</p>
+          <p style="color:#999;font-size:12px;">Last updated: January 2025 · AutoHealz</p>
+        </div>
+      </div>
+      <div class="tm-footer">
+        <button class="tm-accept-btn"  onclick="acceptTerms()">✓ I Accept &amp; Agree</button>
+        <button class="tm-decline-btn" onclick="closeModal()">Decline</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer id="footer" class="footer dark-background">
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <p>© <span>Copyright</span> <strong class="px-1 sitename">Autohealz</strong> <span>All Rights Reserved</span></p>
+          </div>
+          <div class="col-lg-6 text-end">
+            <div class="credits">Designed by Sakshi Kaspate.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <script>
+    /* ══════════════════════════════════════════
+       PASSWORD TOGGLES
+    ══════════════════════════════════════════ */
+    function makePwToggle(btnId, inputId) {
+      document.getElementById(btnId).addEventListener("click", function () {
+        const pw   = document.getElementById(inputId);
+        const icon = this.querySelector("i");
+        if (pw.type === "password") { pw.type = "text";     icon.classList.replace("bi-eye","bi-eye-slash"); }
+        else                        { pw.type = "password"; icon.classList.replace("bi-eye-slash","bi-eye"); }
+      });
+    }
+    makePwToggle("togglePw1","password");
+    makePwToggle("togglePw2","confirmPassword");
+
+    /* ══════════════════════════════════════════
+       PASSWORD STRENGTH METER
+    ══════════════════════════════════════════ */
+    function checkStrength(val) {
+      const bars  = [1,2,3,4].map(i => document.getElementById("bar"+i));
+      const label = document.getElementById("strengthLabel");
+      let score = 0;
+      if (val.length >= 6)                                  score++;
+      if (val.length >= 10)                                 score++;
+      if (/[A-Z]/.test(val) && /[0-9]/.test(val))          score++;
+      if (/[^A-Za-z0-9]/.test(val))                        score++;
+      bars.forEach((b,i) => {
+        b.className = "bar";
+        if (i < score) b.classList.add(["weak","fair","good","strong"][score-1]);
+      });
+      label.textContent = val.length ? (["","Weak","Fair","Good","Strong"][score] || "Weak") : "";
+    }
+
+    /* ══════════════════════════════════════════
+       REAL-TIME UNIQUENESS CHECK (AJAX)
+       Calls Django endpoint: /check-field/?field=username&value=...
+       Expected JSON response: { "available": true/false, "message": "..." }
+    ══════════════════════════════════════════ */
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    let usernameTimer, emailTimer;
+    let usernameValid = false, emailValid = false;
+
+    function setFieldState(fieldId, state, errMsg, okMsg) {
+      const input  = document.getElementById(fieldId);
+      const status = document.getElementById(fieldId + 'Status');
+      const err    = document.getElementById(fieldId + 'Err');
+      const ok     = document.getElementById(fieldId + 'Ok');
+
+      input.classList.remove('is-invalid', 'is-valid');
+      status.className  = 'input-status';
+      status.textContent = '';
+      if (err) err.textContent = '';
+      if (ok)  ok.style.display = 'none';
+
+      if (state === 'checking') {
+        status.classList.add('checking');
+        status.textContent = '↻';
+      } else if (state === 'valid') {
+        input.classList.add('is-valid');
+        status.classList.add('valid');
+        status.textContent = '✓';
+        if (ok) { ok.textContent = okMsg || ''; ok.style.display = 'block'; }
+      } else if (state === 'invalid') {
+        input.classList.add('is-invalid');
+        status.classList.add('invalid');
+        status.textContent = '✕';
+        if (err) err.textContent = errMsg || '';
+      }
+    }
+
+    async function checkField(field, value) {
+      try {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const res  = await fetch(`/check-field/?field=${field}&value=${encodeURIComponent(value)}`, {
+          headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        const data = await res.json();
+        return data; // { available: bool, message: str }
+      } catch {
+        return { available: true, message: '' }; // fail open — server will validate
+      }
+    }
+
+    /* Username: check format then availability */
+    document.getElementById('username').addEventListener('input', function () {
+      const val = this.value.trim();
+      clearTimeout(usernameTimer);
+      usernameValid = false;
+
+      if (!val) { setFieldState('username', '', '', ''); return; }
+      if (val.length < 3) {
+        setFieldState('username', 'invalid', 'Username must be at least 3 characters.'); return;
+      }
+      if (!/^[a-zA-Z0-9_]+$/.test(val)) {
+        setFieldState('username', 'invalid', 'Only letters, numbers, and underscores allowed.'); return;
+      }
+
+      setFieldState('username', 'checking');
+      usernameTimer = setTimeout(async () => {
+        const data = await checkField('username', val);
+        if (data.available) {
+          setFieldState('username', 'valid', '', '✓ Username is available');
+          usernameValid = true;
+        } else {
+          setFieldState('username', 'invalid', data.message || 'Username already taken.');
+          usernameValid = false;
+        }
+      }, 500);
+    });
+
+    /* Email: check format then availability */
+    document.getElementById('email').addEventListener('input', function () {
+      const val = this.value.trim();
+      clearTimeout(emailTimer);
+      emailValid = false;
+
+      if (!val) { setFieldState('email', '', '', ''); return; }
+
+      if (!emailRegex.test(val)) {
+        setFieldState('email', 'invalid', 'Please enter a valid email address (e.g. you@example.com).');
+        return;
+      }
+
+      setFieldState('email', 'checking');
+      emailTimer = setTimeout(async () => {
+        const data = await checkField('email', val);
+        if (data.available) {
+          setFieldState('email', 'valid', '', '✓ Email is available');
+          emailValid = true;
+        } else {
+          setFieldState('email', 'invalid', data.message || 'An account with this email already exists.');
+          emailValid = false;
+        }
+      }, 500);
+    });
+
+    /* ══════════════════════════════════════════
+       FORM SUBMIT VALIDATION (final guard)
+    ══════════════════════════════════════════ */
+    document.getElementById("signForm").addEventListener("submit", function (e) {
+      const username = document.getElementById("username").value.trim();
+      const email    = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirm  = document.getElementById("confirmPassword").value;
+      const terms    = document.getElementById("terms").checked;
+      let ok = true;
+
+      if (!username || username.length < 3) {
+        setFieldState('username', 'invalid', 'Please enter a valid username.');
+        ok = false;
+      } else if (!usernameValid) {
+        setFieldState('username', 'invalid', 'This username is already taken.');
+        ok = false;
+      }
+
+      if (!emailRegex.test(email)) {
+        setFieldState('email', 'invalid', 'Please enter a valid email address.');
+        ok = false;
+      } else if (!emailValid) {
+        setFieldState('email', 'invalid', 'This email is already registered.');
+        ok = false;
+      }
+
+      if (password.length < 6) {
+        document.getElementById("password").classList.add("is-invalid");
+        ok = false;
+      }
+
+      if (password !== confirm) {
+        document.getElementById("confirmPassword").classList.add("is-invalid");
+        document.getElementById("confirmErr").textContent = "Passwords do not match.";
+        ok = false;
+      }
+
+      if (!terms) {
+        alert("Please read and agree to the Terms of Service and Privacy Policy to continue.");
+        ok = false;
+      }
+
+      if (!ok) e.preventDefault();
+    });
+
+    /* Pre-fill validation state for server-returned values (e.g. after failed POST) */
+    (function () {
+      const uVal = document.getElementById('username').value.trim();
+      const eVal = document.getElementById('email').value.trim();
+      // If server flagged errors they'll already show via Django template tags.
+      // Trigger async check if values exist and no server error was shown.
+      const uErr = document.getElementById('usernameErr').textContent.trim();
+      const eErr = document.getElementById('emailErr').textContent.trim();
+      if (uVal && !uErr) document.getElementById('username').dispatchEvent(new Event('input'));
+      if (eVal && !eErr) document.getElementById('email').dispatchEvent(new Event('input'));
+    })();
+
+    /* ══════════════════════════════════════════
+       MODAL
+    ══════════════════════════════════════════ */
+    let currentTab = 'terms';
+
+    function openModal(tab) {
+      currentTab = tab || 'terms';
+      document.getElementById('tmOverlay').classList.add('open');
+      switchTab(currentTab);
+    }
+    function closeModal() { document.getElementById('tmOverlay').classList.remove('open'); }
+    function overlayClick(e) { if (e.target === document.getElementById('tmOverlay')) closeModal(); }
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tabTerms').classList.toggle('active', tab === 'terms');
+      document.getElementById('tabPrivacy').classList.toggle('active', tab === 'privacy');
+      document.getElementById('contentTerms').classList.toggle('active', tab === 'terms');
+      document.getElementById('contentPrivacy').classList.toggle('active', tab === 'privacy');
+      document.getElementById('tmTitle').textContent = tab === 'terms' ? 'Terms of Service' : 'Privacy Policy';
+    }
+    function acceptTerms() {
+      document.getElementById('terms').checked = true;
+      closeModal();
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+
+</body>
+</html>

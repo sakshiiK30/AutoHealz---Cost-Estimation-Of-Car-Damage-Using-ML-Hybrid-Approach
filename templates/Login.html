@@ -1,0 +1,497 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoHealz — Login</title>
+  <link href="{% static 'assets/img/logo1.jpg' %}" rel="icon">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    :root {
+      --orange: #ff7a00;
+      --orange-dark: #cc5e00;
+      --blue: #006eff;
+      --dark: #0d0d0d;
+      --card-bg: #ffffff;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --input-bg: #f9fafb;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body { font-family: 'DM Sans', sans-serif; background: #f0f2f5; min-height: 100vh; }
+
+    .auth-wrap { display: flex; min-height: calc(100vh - 70px); }
+
+    .auth-panel-left {
+      flex: 1;
+      background: linear-gradient(145deg, #0d0d0d 0%, #1a1a1a 60%, #2a1200 100%);
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+      padding: 60px 56px; position: relative; overflow: hidden;
+    }
+    .auth-panel-left::before {
+      content: ''; position: absolute; top: -120px; right: -120px;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,122,0,0.18) 0%, transparent 70%);
+    }
+    .auth-panel-left::after {
+      content: ''; position: absolute; bottom: -80px; left: -80px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,110,255,0.12) 0%, transparent 70%);
+    }
+    .left-brand { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 6px; position: relative; z-index: 1; }
+    .left-brand span { color: var(--orange); }
+    .left-tagline { font-size: 14px; color: rgba(255,255,255,0.45); margin-bottom: 48px; position: relative; z-index: 1; }
+    .left-feature { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; position: relative; z-index: 1; }
+    .left-feature-icon { width: 42px; height: 42px; border-radius: 10px; background: rgba(255,122,0,0.15); border: 1px solid rgba(255,122,0,0.25); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .left-feature-text strong { display: block; font-size: 13px; font-weight: 600; color: #fff; }
+    .left-feature-text span { font-size: 12px; color: rgba(255,255,255,0.4); }
+    .left-car-graphic { position: absolute; bottom: 32px; right: -20px; font-size: 140px; opacity: 0.06; z-index: 0; transform: scaleX(-1); }
+
+    .auth-panel-right { width: 480px; background: var(--card-bg); display: flex; align-items: center; justify-content: center; padding: 40px 48px; }
+    .auth-form-wrap { width: 100%; }
+    .auth-heading { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+    .auth-sub { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+
+    .msg-error { background: #fff0ee; border: 1px solid #ffb3a7; color: #c0392b; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .msg-success { background: #eafaf1; border: 1px solid #a9dfbf; color: #1e8449; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+
+    .field-group { margin-bottom: 18px; }
+    .field-group label { display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .input-wrap { position: relative; }
+    .input-wrap .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 15px; pointer-events: none; }
+    .input-wrap input { width: 100%; padding: 11px 42px 11px 40px; background: var(--input-bg); border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--dark); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .input-wrap input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,122,0,0.1); background: #fff; }
+    .input-wrap input.is-invalid { border-color: #e74c3c; }
+    .toggle-pw { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #9ca3af; font-size: 15px; padding: 2px; }
+    .toggle-pw:hover { color: var(--orange); }
+    .field-err-msg { font-size: 11px; color: #e74c3c; margin-top: 4px; display: block; min-height: 14px; }
+
+    .auth-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; font-size: 13px; }
+    .auth-row .form-check-label { color: var(--muted); cursor: pointer; }
+    .auth-row .form-check-input:checked { background-color: var(--orange); border-color: var(--orange); }
+    .forgot-link { color: var(--blue); text-decoration: none; font-size: 13px; cursor: pointer; }
+    .forgot-link:hover { text-decoration: underline; }
+
+    .btn-auth { width: 100%; padding: 13px; background: var(--orange); border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: #fff; cursor: pointer; letter-spacing: 0.3px; transition: background 0.2s, transform 0.1s, box-shadow 0.2s; box-shadow: 0 4px 16px rgba(255,122,0,0.3); }
+    .btn-auth:hover { background: var(--orange-dark); box-shadow: 0 6px 20px rgba(255,122,0,0.4); transform: translateY(-1px); }
+    .btn-auth:active { transform: translateY(0); }
+
+    .auth-switch { text-align: center; margin-top: 24px; font-size: 13px; color: var(--muted); }
+    .auth-switch a { color: var(--orange); font-weight: 600; text-decoration: none; }
+    .auth-switch a:hover { text-decoration: underline; }
+    .auth-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: #d1d5db; font-size: 12px; }
+    .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    @media (max-width: 900px) { .auth-panel-left { display: none; } .auth-panel-right { width: 100%; padding: 40px 24px; } }
+
+    /* ── FORGOT PASSWORD MODAL ── */
+    .fp-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      z-index: 9000;
+      align-items: center;
+      justify-content: center;
+    }
+    .fp-overlay.open { display: flex; }
+
+    .fp-modal {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px 36px;
+      width: 420px;
+      max-width: 95vw;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+      animation: modal-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    @keyframes modal-in {
+      from { transform: scale(0.9); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .fp-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .fp-modal-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .fp-close {
+      background: none; border: none;
+      font-size: 20px; cursor: pointer;
+      color: #9ca3af; padding: 4px;
+      line-height: 1;
+    }
+    .fp-close:hover { color: var(--dark); }
+
+    .fp-desc { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+
+    /* steps inside modal */
+    .fp-step { display: none; }
+    .fp-step.active { display: block; }
+
+    .fp-info-box {
+      background: #fff8f0;
+      border: 1px solid #ffddb3;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #7a4000;
+      line-height: 1.6;
+    }
+    .fp-info-box strong { color: #b35000; }
+
+    .fp-option-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--input-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .fp-option-btn:hover { border-color: var(--orange); background: #fff8f3; }
+    .fp-option-btn .fob-icon { font-size: 22px; }
+    .fp-option-btn .fob-text strong { display: block; font-size: 13px; font-weight: 600; color: var(--dark); }
+    .fp-option-btn .fob-text span { font-size: 11px; color: var(--muted); }
+
+    .fp-input-label { display: block; font-size: 11px; font-weight: 600; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .fp-input { width: 100%; padding: 11px 14px; background: var(--input-bg); border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--dark); outline: none; margin-bottom: 16px; }
+    .fp-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,122,0,0.1); background: #fff; }
+
+    .fp-btn { width: 100%; padding: 12px; background: var(--orange); border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; transition: background 0.2s; }
+    .fp-btn:hover { background: var(--orange-dark); }
+    .fp-btn-ghost { width: 100%; padding: 11px; background: none; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--muted); cursor: pointer; margin-top: 8px; transition: all 0.2s; }
+    .fp-btn-ghost:hover { border-color: #aaa; color: var(--dark); }
+
+    .fp-success-icon { font-size: 48px; text-align: center; margin-bottom: 14px; }
+
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-left: 8px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+      <a href="{% url 'home' %}" class="logo d-flex align-items-center me-auto me-xl-0">
+        <h1 class="sitename">AutoHealz</h1><span>.</span>
+      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="auth-wrap">
+
+      <!-- LEFT PANEL -->
+      <div class="auth-panel-left">
+        <div class="left-brand">Auto<span>Healz</span></div>
+        <div class="left-tagline">Smart Car Care, Simplified.</div>
+        <div class="left-feature">
+          <div class="left-feature-icon">🔍</div>
+          <div class="left-feature-text">
+            <strong>AI Damage Detection</strong>
+            <span>Upload a photo, get instant analysis</span>
+          </div>
+        </div>
+        <div class="left-feature">
+          <div class="left-feature-icon">📅</div>
+          <div class="left-feature-text">
+            <strong>Easy Appointment Booking</strong>
+            <span>Schedule service in under 2 minutes</span>
+          </div>
+        </div>
+        <div class="left-feature">
+          <div class="left-feature-icon">💰</div>
+          <div class="left-feature-text">
+            <strong>Transparent Cost Estimates</strong>
+            <span>Know the price before you commit</span>
+          </div>
+        </div>
+        <div class="left-feature">
+          <div class="left-feature-icon">🔧</div>
+          <div class="left-feature-text">
+            <strong>Part Availability Check</strong>
+            <span>Original & substitute parts at a glance</span>
+          </div>
+        </div>
+        <div class="left-car-graphic">🚗</div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="auth-panel-right">
+        <div class="auth-form-wrap">
+
+          <div class="auth-heading">Welcome back 👋</div>
+          <div class="auth-sub">Sign in to your AutoHealz account</div>
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="{% if message.tags == 'error' %}msg-error{% else %}msg-success{% endif %}">
+                <i class="bi {% if message.tags == 'error' %}bi-exclamation-circle{% else %}bi-check-circle{% endif %}"></i>
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="POST" action="{% url 'login' %}" id="loginForm" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <div class="field-group">
+              <label for="username">Username</label>
+              <div class="input-wrap">
+                <i class="bi bi-person input-icon"></i>
+                <input type="text" id="username" name="username" placeholder="Enter your username" value="{{ request.POST.username|default:'' }}">
+              </div>
+              <span class="field-err-msg" id="err-username"></span>
+            </div>
+
+            <div class="field-group">
+              <label for="password">Password</label>
+              <div class="input-wrap">
+                <i class="bi bi-lock input-icon"></i>
+                <input type="password" id="password" name="password" placeholder="Enter your password">
+                <button type="button" class="toggle-pw" id="togglePw">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <span class="field-err-msg" id="err-password"></span>
+            </div>
+
+            <div class="auth-row">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe" name="remember">
+                <label class="form-check-label" for="rememberMe">Remember me</label>
+              </div>
+              <span class="forgot-link" onclick="openForgotModal()">Forgot password?</span>
+            </div>
+
+            <button type="submit" class="btn-auth">Sign In</button>
+
+            <div class="auth-divider">New to AutoHealz?</div>
+
+            <div class="auth-switch">
+              Don't have an account? <a href="{% url 'sign' %}">Create one free →</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ══════════ FORGOT PASSWORD MODAL ══════════ -->
+  <div class="fp-overlay" id="fpOverlay" onclick="overlayClick(event)">
+    <div class="fp-modal" id="fpModal">
+
+      <!-- Step 0: Choose method -->
+      <div class="fp-step active" id="fpStep0">
+        <div class="fp-modal-header">
+          <div class="fp-modal-title">Forgot Password?</div>
+          <button class="fp-close" onclick="closeForgotModal()">✕</button>
+        </div>
+        <p class="fp-desc">No worries! Choose how you'd like to reset your password.</p>
+
+        <div class="fp-info-box">
+          <strong>Note:</strong> For your security, we'll verify your identity before allowing a password reset. Please choose an option below.
+        </div>
+
+        <button class="fp-option-btn" onclick="showStep(1)">
+          <span class="fob-icon">✉️</span>
+          <span class="fob-text">
+            <strong>Reset via Email</strong>
+            <span>We'll send a reset link to your registered email</span>
+          </span>
+          <i class="bi bi-chevron-right ms-auto" style="color:#9ca3af;"></i>
+        </button>
+
+        <button class="fp-option-btn" onclick="showStep(3)">
+          <span class="fob-icon">🔐</span>
+          <span class="fob-text">
+            <strong>Contact Admin</strong>
+            <span>Get direct help from the AutoHealz team</span>
+          </span>
+          <i class="bi bi-chevron-right ms-auto" style="color:#9ca3af;"></i>
+        </button>
+      </div>
+
+      <!-- Step 1: Enter email -->
+      <div class="fp-step" id="fpStep1">
+        <div class="fp-modal-header">
+          <div class="fp-modal-title">Enter your Email</div>
+          <button class="fp-close" onclick="closeForgotModal()">✕</button>
+        </div>
+        <p class="fp-desc">Enter the email address you registered with. We'll send instructions to reset your password.</p>
+
+        <label class="fp-input-label" for="fpEmail">Registered Email Address</label>
+        <input type="email" class="fp-input" id="fpEmail" placeholder="you@example.com">
+        <span class="field-err-msg" id="fpEmailErr"></span>
+
+        <button class="fp-btn" onclick="submitEmailReset()">
+          Send Reset Instructions
+        </button>
+        <button class="fp-btn-ghost" onclick="showStep(0)">← Back</button>
+      </div>
+
+      <!-- Step 2: Email sent confirmation -->
+      <div class="fp-step" id="fpStep2">
+        <div class="fp-modal-header">
+          <div class="fp-modal-title">Check your Inbox</div>
+          <button class="fp-close" onclick="closeForgotModal()">✕</button>
+        </div>
+        <div class="fp-success-icon">📬</div>
+        <p class="fp-desc" style="text-align:center;">
+          We've sent password reset instructions to<br>
+          <strong id="sentEmailDisplay" style="color:#374151;"></strong><br><br>
+          Check your inbox (and spam folder). The link expires in <strong>30 minutes</strong>.
+        </p>
+        <button class="fp-btn" onclick="closeForgotModal()">Done</button>
+        <button class="fp-btn-ghost" onclick="showStep(1)">Try a different email</button>
+      </div>
+
+      <!-- Step 3: Contact admin -->
+      <div class="fp-step" id="fpStep3">
+        <div class="fp-modal-header">
+          <div class="fp-modal-title">Contact Admin</div>
+          <button class="fp-close" onclick="closeForgotModal()">✕</button>
+        </div>
+        <p class="fp-desc">Reach out to our support team and we'll help you regain access to your account.</p>
+
+        <div class="fp-info-box">
+          <strong>📧 Email:</strong> AutoHealz@gmail.com<br>
+          <strong>📞 Phone:</strong> +91 8928856280<br>
+          <strong>🕐 Hours:</strong> Mon–Sat, 9 AM – 6 PM IST<br><br>
+          Please include your <strong>registered username</strong> and <strong>email address</strong> in your message.
+        </div>
+
+        <a href="mailto:AutoHealz@gmail.com?subject=Password Reset Request&body=Hello, I need help resetting my AutoHealz account password.%0A%0AUsername: %0ARegistered Email: " class="fp-btn" style="display:block; text-align:center; text-decoration:none;">
+          📧 Open Email App
+        </a>
+        <button class="fp-btn-ghost" onclick="showStep(0)">← Back</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER (abbreviated) -->
+  <footer id="footer" class="footer dark-background">
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <p>© <span>Copyright</span> <strong class="px-1 sitename">Autohealz</strong> <span>All Rights Reserved</span></p>
+          </div>
+          <div class="col-lg-6 text-end">
+            <div class="credits">Designed by Sakshi Kaspate.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <script>
+    // Password toggle
+    document.getElementById("togglePw").addEventListener("click", function () {
+      const pw = document.getElementById("password");
+      const icon = this.querySelector("i");
+      if (pw.type === "password") { pw.type = "text"; icon.classList.replace("bi-eye","bi-eye-slash"); }
+      else { pw.type = "password"; icon.classList.replace("bi-eye-slash","bi-eye"); }
+    });
+
+    // Form validation
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      let ok = true;
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      document.getElementById("err-username").textContent = "";
+      document.getElementById("err-password").textContent = "";
+      if (!username) { document.getElementById("err-username").textContent = "Username is required."; document.getElementById("username").classList.add("is-invalid"); ok = false; }
+      if (password.length < 6) { document.getElementById("err-password").textContent = "Password must be at least 6 characters."; document.getElementById("password").classList.add("is-invalid"); ok = false; }
+      if (!ok) e.preventDefault();
+    });
+
+    // ── Forgot Password Modal ──
+    function openForgotModal() {
+      document.getElementById('fpOverlay').classList.add('open');
+      showStep(0);
+    }
+
+    function closeForgotModal() {
+      document.getElementById('fpOverlay').classList.remove('open');
+    }
+
+    function overlayClick(e) {
+      if (e.target === document.getElementById('fpOverlay')) closeForgotModal();
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.fp-step').forEach(el => el.classList.remove('active'));
+      document.getElementById('fpStep' + n).classList.add('active');
+    }
+
+    function submitEmailReset() {
+      const email = document.getElementById('fpEmail').value.trim();
+      const errEl = document.getElementById('fpEmailErr');
+      errEl.textContent = '';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errEl.textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+      // Simulate sending (replace with real AJAX call to your Django endpoint)
+      const btn = event.target;
+      btn.innerHTML = 'Sending... <span class="spinner"></span>';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        document.getElementById('sentEmailDisplay').textContent = email;
+        showStep(2);
+        btn.innerHTML = 'Send Reset Instructions';
+        btn.disabled = false;
+      }, 1800);
+    }
+
+    // Close on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeForgotModal();
+    });
+  </script>
+</body>
+</html>

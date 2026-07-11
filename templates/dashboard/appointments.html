@@ -1,0 +1,502 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Appointments - AutoHealz</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'dashboard/assets/images/logo1.jpg' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'dashboard/assets/extra-libs/multicheck/multicheck.css' %}" />
+    <link href="{% static 'dashboard/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css' %}" rel="stylesheet" />
+    <link href="{% static 'dashboard/dist/css/style.min.css' %}" rel="stylesheet" />
+
+    <style>
+      /* ── Status Badge Styles ── */
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+      }
+      .status-pending    { background: #fff8e1; color: #f39c12; border: 1px solid #f9d77e; }
+      .status-approved   { background: #e8f5e9; color: #27ae60; border: 1px solid #a9dfbf; }
+      .status-rejected   { background: #fdecea; color: #e74c3c; border: 1px solid #f5b7b1; }
+      .status-delivered  { background: #e8f4fd; color: #2980b9; border: 1px solid #aed6f1; }
+
+      /* ── Action Buttons ── */
+      .action-btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        min-width: 180px;
+      }
+      .btn-approve  { background: #27ae60; color: #fff; border: none; border-radius: 6px; padding: 5px 11px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+      .btn-approve:hover  { background: #1e8449; }
+      .btn-reject   { background: #e74c3c; color: #fff; border: none; border-radius: 6px; padding: 5px 11px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+      .btn-reject:hover   { background: #c0392b; }
+      .btn-deliver  { background: #2980b9; color: #fff; border: none; border-radius: 6px; padding: 5px 11px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+      .btn-deliver:hover  { background: #1a5276; }
+
+      /* Disabled state for done statuses */
+      .action-done { color: #aaa; font-size: 12px; font-style: italic; }
+
+      /* ── Rejection Modal ── */
+      .rej-overlay {
+        display: none;
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(3px);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+      }
+      .rej-overlay.open { display: flex; }
+      .rej-modal {
+        background: #fff;
+        border-radius: 16px;
+        padding: 28px 32px;
+        width: 460px;
+        max-width: 95vw;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        animation: pop-in 0.25s ease;
+      }
+      @keyframes pop-in {
+        from { transform: scale(0.92); opacity: 0; }
+        to   { transform: scale(1);    opacity: 1; }
+      }
+      .rej-modal h5 {
+        font-size: 17px; font-weight: 700; margin-bottom: 6px; color: #1a1a2e;
+        display: flex; align-items: center; gap: 8px;
+      }
+      .rej-modal h5 .rej-icon { color: #e74c3c; font-size: 20px; }
+      .rej-modal p  { font-size: 13px; color: #6b7280; margin-bottom: 16px; }
+      .rej-modal label { font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+      .rej-modal textarea {
+        width: 100%; border: 1.5px solid #e5e7eb; border-radius: 10px;
+        padding: 10px 14px; font-size: 13px; font-family: inherit;
+        resize: vertical; min-height: 90px; outline: none;
+        transition: border-color 0.2s;
+      }
+      .rej-modal textarea:focus { border-color: #e74c3c; box-shadow: 0 0 0 3px rgba(231,76,60,0.1); }
+      .rej-quick-reasons { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+      .rej-quick-reasons button {
+        background: #fdecea; color: #e74c3c; border: 1px solid #f5b7b1;
+        border-radius: 20px; padding: 4px 12px; font-size: 12px; cursor: pointer;
+        transition: background 0.2s;
+      }
+      .rej-quick-reasons button:hover { background: #f5b7b1; }
+      .rej-footer { display: flex; gap: 10px; margin-top: 18px; }
+      .rej-submit-btn {
+        flex: 1; padding: 11px; background: #e74c3c; border: none;
+        border-radius: 10px; color: #fff; font-size: 14px; font-weight: 700;
+        cursor: pointer; transition: background 0.2s;
+      }
+      .rej-submit-btn:hover { background: #c0392b; }
+      .rej-cancel-btn {
+        padding: 11px 20px; background: none; border: 1.5px solid #e5e7eb;
+        border-radius: 10px; font-size: 13px; color: #6b7280; cursor: pointer;
+        transition: all 0.2s;
+      }
+      .rej-cancel-btn:hover { border-color: #aaa; color: #1a1a2e; }
+
+      /* reason tooltip */
+      .reason-tip {
+        display: inline-block; max-width: 160px; overflow: hidden;
+        text-overflow: ellipsis; white-space: nowrap;
+        font-size: 11px; color: #e74c3c; font-style: italic;
+        cursor: help;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="preloader">
+      <div class="lds-ripple"><div class="lds-pos"></div><div class="lds-pos"></div></div>
+    </div>
+
+    <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5"
+         data-sidebartype="full" data-sidebar-position="absolute"
+         data-header-position="absolute" data-boxed-layout="full">
+
+      <!-- ===== TOPBAR ===== -->
+      <header class="topbar" data-navbarbg="skin5">
+        <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+          <div class="navbar-header" data-logobg="skin5">
+            <a class="navbar-brand" href="{% url 'dashboard' %}">
+              <b class="logo-icon ps-2">
+                <img src="{% static 'dashboard/assets/images/logo1.jpg' %}" alt="homepage"
+                     class="light-logo" style="height:45px;width:100%;" width="25" />
+              </b>
+              <span class="logo-text ms-2">AutoHealz</span>
+            </a>
+            <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)">
+              <i class="ti-menu ti-close"></i>
+            </a>
+          </div>
+
+          <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin5">
+            <ul class="navbar-nav float-start me-auto">
+              <li class="nav-item d-none d-lg-block">
+                <a class="nav-link sidebartoggler waves-effect waves-light"
+                   href="javascript:void(0)" data-sidebartype="mini-sidebar">
+                  <i class="mdi mdi-menu font-24"></i>
+                </a>
+              </li>
+            </ul>
+            <ul class="navbar-nav float-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic"
+                   href="#" id="navbarDropdown" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="{% static 'dashboard/assets/images/woman.png' %}"
+                       alt="user" class="rounded-circle" width="31" />
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end user-dd animated" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{% url 'change_password' %}">
+                    <i class="mdi mdi-settings me-1 ms-1"></i> Change Password
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'logout' %}">
+                    <i class="fa fa-power-off me-1 ms-1"></i> Logout
+                  </a>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+      <!-- ===== SIDEBAR ===== -->
+      <aside class="left-sidebar" data-sidebarbg="skin5">
+        <div class="scroll-sidebar">
+          <nav class="sidebar-nav">
+            <ul id="sidebarnav" class="pt-4">
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="{% url 'dashboard' %}" aria-expanded="false">
+                  <i class="mdi mdi-view-dashboard"></i>
+                  <span class="hide-menu">Dashboard</span>
+                </a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="{% url 'display' %}" aria-expanded="false">
+                  <i class="mdi mdi-email-outline"></i>
+                  <span class="hide-menu">Enquiry Details</span>
+                </a>
+              </li>
+              <li class="sidebar-item active">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="{% url 'appointment_list' %}" aria-expanded="false">
+                  <i class="mdi mdi-calendar-check"></i>
+                  <span class="hide-menu">Appointments</span>
+                </a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="{% url 'userprofile_list' %}" aria-expanded="false">
+                  <i class="mdi mdi-account-multiple"></i>
+                  <span class="hide-menu">Registered Users</span>
+                </a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="{% url 'reports' %}" aria-expanded="false">
+                  <i class="mdi mdi-file-chart"></i>
+                  <span class="hide-menu">Report Generation</span>
+                </a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="{% url 'change_password' %}" aria-expanded="false">
+                  <i class="mdi mdi-lock-reset"></i>
+                  <span class="hide-menu">Change Password</span>
+                </a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                   href="{% url 'logout' %}" aria-expanded="false">
+                  <i class="mdi mdi-logout"></i>
+                  <span class="hide-menu">Logout</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- ===== PAGE WRAPPER ===== -->
+      <div class="page-wrapper">
+
+        <div class="page-breadcrumb">
+          <div class="row">
+            <div class="col-12 d-flex no-block align-items-center">
+              <h4 class="page-title">Appointments</h4>
+              <div class="ms-auto text-end">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Appointments</li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Booked Appointments</h5>
+                  <div class="table-responsive">
+                    <table id="appt_table" class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Sr. No.</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Phone</th>
+                          <th>Vehicle</th>
+                          <th>Service</th>
+                          <th>Date</th>
+                          <th>Time Slot</th>
+                          <th>Notes</th>
+                          <th>Damage Report</th>
+                          <th>Booked On</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for appt in appointments %}
+                        <tr>
+                          <th scope="row">{{ forloop.counter }}</th>
+                          <td>{{ appt.name }}</td>
+                          <td>{{ appt.email }}</td>
+                          <td>{{ appt.phone }}</td>
+                          <td>{{ appt.vehicle }}</td>
+                          <td>{{ appt.service }}</td>
+                          <td>{{ appt.date }}</td>
+                          <td>{{ appt.time_slot }}</td>
+                          <td>{{ appt.notes|default:"—" }}</td>
+
+                          <!-- Damage Report -->
+                          <td>
+                            {% if appt.report_file %}
+                              <a href="{{ appt.report_file.url }}"
+                                 target="_blank"
+                                 class="btn btn-sm btn-outline-primary"
+                                 title="{{ appt.report_file.name }}">
+                                <i class="mdi mdi-file-pdf"></i> View
+                              </a>
+                            {% else %}
+                              <span class="text-muted">—</span>
+                            {% endif %}
+                          </td>
+
+                          <td>{{ appt.created_at|date:"d M Y, H:i" }}</td>
+
+                          <!-- ===== STATUS BADGE ===== -->
+                          <td>
+                            {% if appt.status == 'approved' %}
+                              <span class="status-badge status-approved">
+                                <i class="mdi mdi-check-circle"></i> Approved
+                              </span>
+                            {% elif appt.status == 'rejected' %}
+                              <span class="status-badge status-rejected">
+                                <i class="mdi mdi-close-circle"></i> Rejected
+                              </span>
+                              {% if appt.rejection_reason %}
+                                <br>
+                                <span class="reason-tip" title="{{ appt.rejection_reason }}">
+                                  ↳ {{ appt.rejection_reason }}
+                                </span>
+                              {% endif %}
+                            {% elif appt.status == 'delivered' %}
+                              <span class="status-badge status-delivered">
+                                <i class="mdi mdi-truck-delivery"></i> Delivered
+                              </span>
+                            {% else %}
+                              <span class="status-badge status-pending">
+                                <i class="mdi mdi-clock-outline"></i> Pending
+                              </span>
+                            {% endif %}
+                          </td>
+
+                          <!-- ===== ACTION BUTTONS ===== -->
+                          <td>
+                            {% if appt.status == 'delivered' %}
+                              <span class="action-done">✓ Completed</span>
+                            {% else %}
+                              <div class="action-btn-group">
+
+                                {% if appt.status != 'approved' and appt.status != 'rejected' %}
+                                  <!-- Approve -->
+                                  <form action="{% url 'update_appointment_status' appt.id %}" method="POST" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="approved">
+                                    <button type="submit" class="btn-approve"
+                                            onclick="return confirm('Approve this appointment?')">
+                                      <i class="mdi mdi-check"></i> Approve
+                                    </button>
+                                  </form>
+
+                                  <!-- Reject -->
+                                  <button type="button" class="btn-reject"
+                                          onclick="openRejectModal({{ appt.id }})">
+                                    <i class="mdi mdi-close"></i> Reject
+                                  </button>
+                                {% endif %}
+
+                                {% if appt.status == 'approved' %}
+                                  <!-- Mark as Delivered -->
+                                  <form action="{% url 'update_appointment_status' appt.id %}" method="POST" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="delivered">
+                                    <button type="submit" class="btn-deliver"
+                                            onclick="return confirm('Mark this appointment as delivered?')">
+                                      <i class="mdi mdi-truck-delivery"></i> Delivered
+                                    </button>
+                                  </form>
+                                {% endif %}
+
+                                {% if appt.status == 'rejected' %}
+                                  <!-- Re-approve after rejection -->
+                                  <form action="{% url 'update_appointment_status' appt.id %}" method="POST" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="approved">
+                                    <button type="submit" class="btn-approve"
+                                            onclick="return confirm('Re-approve this appointment?')">
+                                      <i class="mdi mdi-check"></i> Re-approve
+                                    </button>
+                                  </form>
+                                {% endif %}
+
+                              </div>
+                            {% endif %}
+                          </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                          <td colspan="13" class="text-center text-muted py-4">
+                            No appointments booked yet.
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="footer text-center">All Rights Reserved by AutoHealz.</footer>
+      </div>
+    </div><!-- /main-wrapper -->
+
+    <!-- ═══════════════════════════════════════
+         REJECTION REASON MODAL
+    ═══════════════════════════════════════ -->
+    <div class="rej-overlay" id="rejOverlay" onclick="overlayClickRej(event)">
+      <div class="rej-modal" id="rejModal">
+        <h5><span class="rej-icon">✕</span> Reject Appointment</h5>
+        <p>Please provide a reason. The customer will be informed of this decision.</p>
+
+        <!-- Quick reason chips -->
+        <div class="rej-quick-reasons">
+          <button type="button" onclick="setReason('Slot no longer available')">Slot unavailable</button>
+          <button type="button" onclick="setReason('Insufficient information provided')">Insufficient info</button>
+          <button type="button" onclick="setReason('Vehicle not supported for this service')">Vehicle not supported</button>
+          <button type="button" onclick="setReason('Service not available at this time')">Service unavailable</button>
+          <button type="button" onclick="setReason('Duplicate booking detected')">Duplicate booking</button>
+        </div>
+
+        <label for="rejReason">Rejection Reason *</label>
+        <textarea id="rejReason" placeholder="Type the reason here, or choose one above…"></textarea>
+
+        <form id="rejForm" method="POST" action="">
+          {% csrf_token %}
+          <input type="hidden" name="status" value="rejected">
+          <input type="hidden" name="rejection_reason" id="rejReasonHidden">
+        </form>
+
+        <div class="rej-footer">
+          <button class="rej-submit-btn" type="button" onclick="submitRejection()">
+            Confirm Rejection
+          </button>
+          <button class="rej-cancel-btn" type="button" onclick="closeRejectModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'dashboard/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/extra-libs/sparkline/sparkline.js' %}"></script>
+    <script src="{% static 'dashboard/dist/js/waves.js' %}"></script>
+    <script src="{% static 'dashboard/dist/js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'dashboard/dist/js/custom.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/extra-libs/multicheck/datatable-checkbox-init.js' %}"></script>
+    <script src="{% static 'dashboard/assets/extra-libs/multicheck/jquery.multicheck.js' %}"></script>
+    <script src="{% static 'dashboard/assets/extra-libs/DataTables/datatables.min.js' %}"></script>
+
+    <script>
+      $("#appt_table").DataTable();
+
+      /* ── Rejection Modal Logic ── */
+      let currentApptId = null;
+
+      function openRejectModal(apptId) {
+        currentApptId = apptId;
+        document.getElementById('rejReason').value = '';
+        document.getElementById('rejOverlay').classList.add('open');
+      }
+
+      function closeRejectModal() {
+        document.getElementById('rejOverlay').classList.remove('open');
+        currentApptId = null;
+      }
+
+      function overlayClickRej(e) {
+        if (e.target === document.getElementById('rejOverlay')) closeRejectModal();
+      }
+
+      function setReason(text) {
+        document.getElementById('rejReason').value = text;
+        document.getElementById('rejReason').focus();
+      }
+
+      function submitRejection() {
+        const reason = document.getElementById('rejReason').value.trim();
+        if (!reason) {
+          document.getElementById('rejReason').style.borderColor = '#e74c3c';
+          document.getElementById('rejReason').focus();
+          return;
+        }
+        document.getElementById('rejReasonHidden').value = reason;
+
+        // Build the correct action URL dynamically
+        // URL pattern: /dashboard/appointments/<id>/update-status/
+        const form = document.getElementById('rejForm');
+        form.action = `/appointments/${currentApptId}/update-status/`;
+        form.submit();
+      }
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeRejectModal();
+      });
+    </script>
+  </body>
+</html>

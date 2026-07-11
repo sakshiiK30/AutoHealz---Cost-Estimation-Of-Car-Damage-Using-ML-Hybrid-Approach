@@ -1,0 +1,671 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoHealz — Estimation Results</title>
+  <link rel="icon" href="{% static 'assets/img/logo1.jpg' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink: #1a1625;
+      --ink2: #4a4560;
+      --muted: #8b87a0;
+      --border: #e8e5f0;
+      --surface: #f5f3fb;
+      --violet: #6c3ff0;
+      --violet-mid: #8b5cf6;
+      --violet-soft: #f0ecff;
+      --coral: #f0614a;
+      --coral-soft: #fff1ef;
+      --teal: #0fa882;
+      --teal-soft: #e8faf5;
+      --amber: #e8920a;
+      --amber-soft: #fff8ec;
+      --red: #dc2626;
+      --red-soft: #fff0f0;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(135deg, #f8f6ff 0%, #f0ecff 40%, #fff5f3 100%);
+      background-attachment: fixed;
+      color: var(--ink);
+    }
+
+    .ah-header {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .ah-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--ink); text-decoration: none; letter-spacing: -0.03em; }
+    .ah-logo span { color: var(--violet); }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--ink2); text-decoration: none; padding: 7px 16px; border: 1.5px solid var(--border); border-radius: 20px; background: #fff; transition: all 0.15s; }
+    .back-link:hover { color: var(--violet); border-color: var(--violet); background: var(--violet-soft); }
+
+    .results-wrap { max-width: 920px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+    .results-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 12px; }
+    .results-title { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
+    .car-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--violet-soft); border: 1.5px solid rgba(108,63,240,0.2); padding: 5px 14px; border-radius: 20px; font-size: 0.78rem; color: var(--violet); font-weight: 500; margin-top: 6px; }
+    .result-thumb { width: 90px; height: 65px; object-fit: cover; border-radius: var(--radius-sm); border: 2px solid var(--border); }
+
+    .results-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
+    @media (max-width: 720px) { .results-grid { grid-template-columns: 1fr; } .summary-sticky { position: static !important; } }
+
+    .card-block { background: rgba(255,255,255,0.95); border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .card-head { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface); }
+    .card-head-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--ink); }
+    .card-body { padding: 1.25rem; }
+
+    .result-photo { width: 100%; max-height: 280px; object-fit: cover; display: block; }
+    .photo-footer { padding: 10px 1.25rem; background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+
+    .sev { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+    .sev::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+    .sev-minor    { background: var(--teal-soft); color: var(--teal); }
+    .sev-minor::before { background: var(--teal); }
+    .sev-moderate { background: var(--amber-soft); color: var(--amber); }
+    .sev-moderate::before { background: var(--amber); }
+    .sev-severe   { background: var(--red-soft); color: var(--red); }
+    .sev-severe::before { background: var(--red); }
+
+    .det-item { padding: 1.1rem 0; border-bottom: 1px solid var(--surface); }
+    .det-item:last-child { border: none; }
+    .det-row1 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+    .det-part-name { font-weight: 500; font-size: 0.95rem; color: var(--ink); }
+    .det-conf { font-size: 0.72rem; color: var(--muted); margin-left: auto; }
+    .det-caption { font-size: 0.82rem; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
+
+    .knn-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .knn-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; font-size: 0.72rem; color: var(--ink2); }
+    .knn-chip strong { color: var(--violet); }
+
+    .cost-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .cost-chip { flex: 1; min-width: 80px; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; text-align: center; }
+    .cost-chip .chip-lbl { font-size: 0.68rem; color: var(--muted); display: block; margin-bottom: 2px; }
+    .cost-chip .chip-val { font-size: 0.88rem; font-weight: 500; color: var(--ink); }
+    .cost-chip.chip-total { background: var(--violet-soft); border-color: rgba(108,63,240,0.25); }
+    .cost-chip.chip-total .chip-val { color: var(--violet); font-weight: 700; }
+
+    .part-avail-table { border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; margin-top: 8px; }
+    .avail-header { background: var(--surface); padding: 7px 12px; font-size: 0.72rem; font-weight: 600; color: var(--ink2); border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.05em; }
+    .avail-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+    .avail-row:last-child { border-bottom: none; }
+    .avail-row-oem  { background: #f0fdf8; }
+    .avail-row-alt  { background: #fffbf0; }
+    .avail-row-none { background: #fafafa; }
+    .avail-row-left { display: flex; align-items: center; gap: 7px; flex: 1; }
+    .avail-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-oem  { background: var(--teal); }
+    .dot-alt  { background: var(--amber); }
+    .dot-none { background: #aaa; }
+    .avail-type  { color: var(--ink); font-weight: 500; }
+    .avail-price { color: var(--ink2); font-size: 0.8rem; white-space: nowrap; }
+    .avail-badge { font-size: 0.68rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+    .badge-oem  { background: var(--teal-soft);  color: var(--teal);  border: 1px solid rgba(15,168,130,0.25); }
+    .badge-alt  { background: var(--amber-soft); color: var(--amber); border: 1px solid rgba(232,146,10,0.25); }
+    .badge-none { background: #f0f0f0; color: #888; border: 1px solid #ddd; }
+
+    .found-badge { font-size: 0.78rem; color: var(--violet); font-weight: 500; background: var(--violet-soft); padding: 3px 12px; border-radius: 20px; }
+
+    .summary-sticky { position: sticky; top: 80px; }
+    .summary-total { background: linear-gradient(145deg, #2d1f6e, #1a1625); color: #fff; border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; border: 1.5px solid rgba(108,63,240,0.3); }
+    .summary-total .label { font-size: 0.72rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.08em; }
+    .summary-total .amount { font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800; margin: 6px 0; letter-spacing: -0.04em; background: linear-gradient(90deg, #c4b5fd, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .summary-total .sub-note { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+    .summary-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .summary-table tr { border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .summary-table tr:last-child { border: none; }
+    .summary-table td { padding: 8px 0; font-size: 0.82rem; }
+    .summary-table td:last-child { text-align: right; color: rgba(255,255,255,0.8); }
+    .summary-table .total-row td { font-weight: 600; color: #fff; padding-top: 12px; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.18); }
+
+    .meta-card { background: rgba(255,255,255,0.95); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.1rem; margin-bottom: 1rem; }
+    .meta-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--surface); }
+    .meta-row:last-child { border: none; }
+    .meta-row .mk { font-size: 0.8rem; color: var(--muted); }
+    .meta-row .mv { font-size: 0.85rem; font-weight: 500; color: var(--ink); }
+
+    .overall-sev { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: var(--radius-sm); margin-bottom: 1rem; }
+    .overall-sev.minor    { background: var(--teal-soft);  border: 1px solid rgba(15,168,130,0.2); }
+    .overall-sev.moderate { background: var(--amber-soft); border: 1px solid rgba(232,146,10,0.2); }
+    .overall-sev.severe   { background: var(--red-soft);   border: 1px solid rgba(220,38,38,0.2); }
+    .overall-sev .icon { font-size: 1.3rem; }
+    .overall-sev .text-block .title { font-weight: 600; font-size: 0.9rem; }
+    .overall-sev .text-block .sub   { font-size: 0.75rem; opacity: 0.7; margin-top: 2px; }
+
+    .no-det { padding: 3rem 1.5rem; text-align: center; color: var(--muted); }
+    .no-det .icon { font-size: 2.8rem; margin-bottom: 14px; opacity: 0.3; }
+    .no-det p { font-size: 0.875rem; }
+
+    .action-row { display: flex; gap: 8px; margin-top: 0; }
+    .act-btn { flex: 1; padding: 10px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: #fff; font-size: 0.82rem; color: var(--ink2); cursor: pointer; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+    .act-btn:hover { border-color: var(--violet); color: var(--violet); background: var(--violet-soft); }
+
+    .book-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; margin-bottom: 10px; background: linear-gradient(135deg, #6c3ff0, #8b5cf6); border: none; color: #fff; font-weight: 600; font-size: 0.9rem; border-radius: var(--radius-sm); text-decoration: none; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: opacity 0.15s, transform 0.15s; letter-spacing: 0.01em; }
+    .book-btn:hover { opacity: 0.88; transform: translateY(-1px); color: #fff; text-decoration: none; }
+    .book-btn:active { transform: translateY(0); }
+
+    .disclaimer { margin-top: 1.5rem; padding: 14px 18px; background: rgba(255,255,255,0.8); border: 1px solid var(--border); border-left: 3px solid var(--violet); border-radius: var(--radius-sm); font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    .card-block, .summary-total, .meta-card { animation: fadeUp 0.4s ease both; }
+    .card-block:nth-child(2) { animation-delay: 0.1s; }
+    .meta-card    { animation-delay: 0.05s; }
+    .summary-total { animation-delay: 0.15s; }
+
+    /* ═══════════════════════════════════════════════
+       PRINT STYLES
+       Only #printReport is shown when printing.
+       Uses tables + solid colours so every browser
+       prints it correctly without extra plugins.
+    ═══════════════════════════════════════════════ */
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+      /* Hide everything on the page except the report */
+      body > *                    { display: none !important; }
+      #printReport                { display: block !important; }
+
+      /* Basic page setup */
+      @page { size: A4 portrait; margin: 14mm 14mm 14mm 14mm; }
+
+      body { background: #fff !important; }
+
+      /* Prevent cards from splitting across pages */
+      .pr-card, .pr-grand-wrap, .pr-footer-wrap { page-break-inside: avoid; }
+    }
+
+    /* Print report — hidden on screen, visible only when printing */
+    #printReport {
+      display: none;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      color: #1a1625;
+      background: #fff;
+      width: 100%;
+    }
+
+    /* ── Header ── */
+    .pr-hdr-table { width: 100%; border-bottom: 2px solid #6c3ff0; padding-bottom: 12px; margin-bottom: 18px; border-collapse: collapse; }
+    .pr-logo-text { font-size: 22px; font-weight: 900; color: #1a1625; letter-spacing: -0.03em; line-height: 1; }
+    .pr-logo-text span { color: #6c3ff0; }
+    .pr-powered   { font-size: 10px; color: #8b87a0; margin-top: 3px; }
+    .pr-meta-cell { text-align: right; font-size: 11px; color: #4a4560; line-height: 1.9; vertical-align: top; }
+    .pr-meta-cell strong { color: #1a1625; }
+
+    /* ── Title ── */
+    .pr-h1  { font-size: 24px; font-weight: 900; color: #1a1625; margin: 0 0 4px; }
+    .pr-sub { font-size: 10px; color: #8b87a0; margin: 0 0 14px; }
+
+    /* ── Photo ── */
+    .pr-photo { width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; border: 1px solid #e8e5f0; display: block; margin-bottom: 18px; }
+
+    /* ── Section heading ── */
+    .pr-section { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #6c3ff0; border-bottom: 1px solid #e8e5f0; padding-bottom: 5px; margin: 18px 0 10px; }
+
+    /* ── Part card ── */
+    .pr-card { border: 1px solid #e8e5f0; border-left: 3px solid #6c3ff0; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; background: #f9f8ff; page-break-inside: avoid; }
+    .pr-part-header-table { width: 100%; border-collapse: collapse; margin-bottom: 5px; }
+    .pr-pname { font-size: 14px; font-weight: 700; color: #1a1625; }
+    .pr-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 20px; border: 1px solid; }
+    .pr-minor    { background: #e8faf5; color: #0fa882; border-color: #0fa88244; }
+    .pr-moderate { background: #fff8ec; color: #e8920a; border-color: #e8920a44; }
+    .pr-severe   { background: #fff0f0; color: #dc2626; border-color: #dc262644; }
+    .pr-conf-text { font-size: 10px; color: #8b87a0; text-align: right; }
+    .pr-caption { font-size: 11px; color: #8b87a0; margin: 4px 0 8px; }
+
+    /* ── KNN chips ── */
+    .pr-chip { display: inline-block; font-size: 10px; color: #4a4560; background: #fff; border: 1px solid #e8e5f0; border-radius: 5px; padding: 2px 8px; margin: 0 4px 4px 0; }
+    .pr-chip strong { color: #6c3ff0; }
+    .pr-chips-row { margin-bottom: 8px; }
+
+    /* ── Cost table ── */
+    .pr-cost-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+    .pr-cost-table td { width: 25%; text-align: center; padding: 7px 4px; border: 1px solid #e8e5f0; background: #fff; }
+    .pr-clbl { display: block; font-size: 9px; color: #8b87a0; margin-bottom: 2px; }
+    .pr-cval { font-size: 13px; font-weight: 700; color: #1a1625; }
+    .pr-ctotal { background: #f0ecff !important; border-color: #c4b5fd !important; }
+    .pr-ctotal .pr-cval { color: #6c3ff0; }
+
+    /* ── Availability table ── */
+    .pr-avail-table { width: 100%; border-collapse: collapse; border: 1px solid #e8e5f0; border-radius: 6px; overflow: hidden; margin-top: 8px; font-size: 11px; }
+    .pr-avail-table th { background: #f5f3fb; color: #4a4560; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 10px; border-bottom: 1px solid #e8e5f0; text-align: left; }
+    .pr-avail-table td { padding: 7px 10px; border-bottom: 1px solid #e8e5f0; }
+    .pr-avail-table tr:last-child td { border-bottom: none; }
+    .pr-row-oem  td { background: #f0fdf8; }
+    .pr-row-alt  td { background: #fffbf0; }
+    .pr-row-none td { background: #fafafa; }
+    .pr-adot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+
+    /* ── Grand total — solid colours only (no gradient) ── */
+    .pr-grand-wrap { page-break-inside: avoid; margin-top: 18px; border-radius: 10px; overflow: hidden; }
+    .pr-grand-table { width: 100%; border-collapse: collapse; }
+    .pr-grand-left  { background: #2d1f6e; color: #fff; padding: 16px 20px; width: 50%; vertical-align: middle; }
+    .pr-grand-right { background: #1a1625; color: rgba(255,255,255,0.7); padding: 16px 20px; vertical-align: middle; }
+    .pr-grand-lbl   { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; }
+    .pr-grand-amt   { font-size: 28px; font-weight: 900; color: #c4b5fd; line-height: 1.1; margin: 4px 0; }
+    .pr-grand-note  { font-size: 10px; color: rgba(255,255,255,0.35); }
+    .pr-gtable      { width: 100%; border-collapse: collapse; }
+    .pr-gtable td   { padding: 3px 0; font-size: 11px; color: rgba(255,255,255,0.65); }
+    .pr-gtable td:last-child { text-align: right; color: rgba(255,255,255,0.9); }
+    .pr-gtable .pr-gtotal td { font-weight: 700; color: #fff !important; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 7px; }
+
+    /* ── Footer / disclaimer ── */
+    .pr-footer-wrap { margin-top: 20px; padding: 12px 14px; border: 1px solid #e8e5f0; border-left: 3px solid #6c3ff0; border-radius: 6px; font-size: 10px; color: #8b87a0; line-height: 1.6; background: #faf8ff; page-break-inside: avoid; }
+  </style>
+</head>
+
+<body>
+
+  <header class="ah-header">
+    <a href="{% url 'home' %}" class="ah-logo">Auto<span>Healz</span>.</a>
+    <div>
+      <a href="{% url 'estimate' %}" class="back-link">
+        <i class="bi bi-arrow-left"></i> New assessment
+      </a>
+    </div>
+  </header>
+
+  <div class="results-wrap">
+
+    <div class="results-topbar">
+      <div>
+        <h1 class="results-title">Damage Report</h1>
+        <div>
+          <span class="car-tag">
+            <i class="bi bi-car-front"></i>
+            Maruti Suzuki {{ car_model }}
+          </span>
+        </div>
+      </div>
+      <img src="{{ image_url }}" alt="damaged car" class="result-thumb">
+    </div>
+
+    {% if detections %}
+
+    <div class="results-grid">
+
+      <div>
+        <div class="card-block" style="margin-bottom:1.5rem;">
+          <img src="{{ image_url }}" class="result-photo" alt="Detected damage">
+          <div class="photo-footer">
+            <i class="bi bi-cpu" style="color:var(--violet);font-size:0.9rem"></i>
+            <span style="font-size:0.78rem;color:var(--muted)">AI detection overlay · {{ detections|length }} part{{ detections|length|pluralize }} identified</span>
+          </div>
+        </div>
+
+        <div class="card-block">
+          <div class="card-head">
+            <span class="card-head-title">
+              <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+              Detected Damaged Parts
+            </span>
+            <span class="found-badge">{{ detections|length }} found</span>
+          </div>
+          <div class="card-body">
+
+            {% for det in detections %}
+            <div class="det-item">
+              <div class="det-row1">
+                <span class="det-part-name">{{ det.part_name }}</span>
+                {% if det.severity == "Minor" %}
+                  <span class="sev sev-minor">Minor</span>
+                {% elif det.severity == "Moderate" %}
+                  <span class="sev sev-moderate">Moderate</span>
+                {% else %}
+                  <span class="sev sev-severe">Severe</span>
+                {% endif %}
+                <span class="det-conf">conf {{ det.conf }}</span>
+              </div>
+
+              <p class="det-caption">
+                <i class="bi bi-chat-square-text me-1"></i>{{ det.display_caption }}
+              </p>
+
+              {% if det.knn and not det.knn.error %}
+              <div class="knn-row">
+                <span class="knn-chip">Part: <strong>{{ det.knn.part }}</strong></span>
+                <span class="knn-chip">Damage: <strong>{{ det.knn.damage_type }}</strong></span>
+                <span class="knn-chip">Area: <strong>{{ det.knn.area }}</strong></span>
+                <span class="knn-chip">Level: <strong>{{ det.knn.level_label }}</strong></span>
+              </div>
+              {% endif %}
+
+              {% if det.breakdown %}
+              <div class="cost-chips">
+                <div class="cost-chip">
+                  <span class="chip-lbl">Base repair</span>
+                  <span class="chip-val">₹{{ det.breakdown.base }}</span>
+                </div>
+                <div class="cost-chip">
+                  <span class="chip-lbl">Labour (12%)</span>
+                  <span class="chip-val">₹{{ det.breakdown.labour }}</span>
+                </div>
+                <div class="cost-chip">
+                  <span class="chip-lbl">GST (18%)</span>
+                  <span class="chip-val">₹{{ det.breakdown.gst }}</span>
+                </div>
+                <div class="cost-chip chip-total">
+                  <span class="chip-lbl">Part total</span>
+                  <span class="chip-val">₹{{ det.breakdown.grand_total }}</span>
+                </div>
+              </div>
+              {% endif %}
+
+              {% if det.part_options %}
+              <div class="part-avail-table">
+                <div class="avail-header">
+                  <i class="bi bi-box-seam me-1"></i> Part Availability Options
+                </div>
+                {% if det.part_options.original %}
+                <div class="avail-row avail-row-oem">
+                  <div class="avail-row-left">
+                    <span class="avail-dot dot-oem"></span>
+                    <span class="avail-type">OEM / Original</span>
+                  </div>
+                  <span class="avail-price">₹{{ det.part_options.original.price_range }}</span>
+                  <span class="avail-badge badge-oem"><i class="bi bi-patch-check-fill me-1"></i>Available</span>
+                </div>
+                {% endif %}
+                {% if det.part_options.alternative %}
+                <div class="avail-row avail-row-alt">
+                  <div class="avail-row-left">
+                    <span class="avail-dot dot-alt"></span>
+                    <span class="avail-type">Aftermarket / Alternative</span>
+                  </div>
+                  <span class="avail-price">₹{{ det.part_options.alternative.price_range }}</span>
+                  <span class="avail-badge badge-alt"><i class="bi bi-arrow-repeat me-1"></i>Available</span>
+                </div>
+                {% endif %}
+                {% if det.part_options.not_available %}
+                <div class="avail-row avail-row-none">
+                  <div class="avail-row-left">
+                    <span class="avail-dot dot-none"></span>
+                    <span class="avail-type">Genuine OEM (Dealer Order)</span>
+                  </div>
+                  <span class="avail-price">₹{{ det.part_options.not_available.price_range }}</span>
+                  <span class="avail-badge badge-none"><i class="bi bi-clock me-1"></i>Order Required</span>
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}
+
+            </div>
+            {% endfor %}
+
+          </div>
+        </div>
+
+        <div class="disclaimer">
+          <i class="bi bi-info-circle me-1"></i>
+          Booking Instructions -
+          ​To lock in these rates and check part availability, please proceed to book an appointment.
+        </div>
+      </div>
+
+      <!-- RIGHT: SUMMARY SIDEBAR -->
+      <div class="summary-sticky">
+
+        {% with det_count=detections|length %}
+        {% if det_count > 0 %}
+        <div class="meta-card">
+          {% if overall_severity == "Severe" %}
+          <div class="overall-sev severe">
+            <span class="icon" style="color:var(--red)"><i class="bi bi-exclamation-octagon-fill"></i></span>
+            <div class="text-block">
+              <div class="title" style="color:var(--red)">Severe Damage</div>
+              <div class="sub"   style="color:var(--red)">Immediate repair recommended</div>
+            </div>
+          </div>
+          {% elif overall_severity == "Moderate" %}
+          <div class="overall-sev moderate">
+            <span class="icon" style="color:var(--amber)"><i class="bi bi-exclamation-triangle-fill"></i></span>
+            <div class="text-block">
+              <div class="title" style="color:var(--amber)">Moderate Damage</div>
+              <div class="sub"   style="color:var(--amber)">Repair within 2–4 weeks</div>
+            </div>
+          </div>
+          {% else %}
+          <div class="overall-sev minor">
+            <span class="icon" style="color:var(--teal)"><i class="bi bi-check-circle-fill"></i></span>
+            <div class="text-block">
+              <div class="title" style="color:var(--teal)">Minor Damage</div>
+              <div class="sub"   style="color:var(--teal)">Can be scheduled at convenience</div>
+            </div>
+          </div>
+          {% endif %}
+          <div class="meta-row">
+            <span class="mk">Car model</span>
+            <span class="mv">Maruti Suzuki {{ car_model }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="mk">Parts detected</span>
+            <span class="mv">{{ detections|length }} damaged</span>
+          </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if grand_total %}
+        <div class="summary-total">
+          <div class="label">Total Repair Estimate</div>
+          <div class="amount">₹{{ grand_total }}</div>
+          <div class="sub-note">incl. labour and GST</div>
+          <table class="summary-table">
+            <tr>
+              <td style="color:rgba(255,255,255,0.5)">Parts &amp; base repair</td>
+              <td>₹{{ total_base }}</td>
+            </tr>
+            <tr>
+              <td style="color:rgba(255,255,255,0.5)">Labour (12%)</td>
+              <td>₹{{ total_labour }}</td>
+            </tr>
+            <tr>
+              <td style="color:rgba(255,255,255,0.5)">GST (18%)</td>
+              <td>₹{{ total_gst }}</td>
+            </tr>
+            <tr class="total-row">
+              <td>Grand Total</td>
+              <td>₹{{ grand_total }}</td>
+            </tr>
+          </table>
+        </div>
+        {% endif %}
+
+        <a href="{% url 'BookAppointment' %}" class="book-btn">
+          <i class="bi bi-calendar2-check-fill"></i> Book Appointment
+        </a>
+
+        <div class="action-row">
+          <button class="act-btn" onclick="printReport()">
+            <i class="bi bi-printer"></i> Print
+          </button>
+          <a href="{% url 'estimate' %}" class="act-btn">
+            <i class="bi bi-arrow-repeat"></i> Retry
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    {% else %}
+    <div class="card-block">
+      <div class="card-head">
+        <span class="card-head-title">Detection Results</span>
+      </div>
+      <div class="no-det">
+        <div class="icon"><i class="bi bi-image-alt"></i></div>
+        <p style="font-weight:500;color:var(--ink);margin-bottom:6px;font-size:1rem">No damage detected</p>
+        <p>Try a clearer, closer photo of the damaged area with good lighting.</p>
+        <a href="{% url 'estimate' %}" class="back-link" style="display:inline-flex;margin-top:1.25rem">
+          <i class="bi bi-arrow-left"></i> Try again
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PRINT-ONLY REPORT
+       Hidden on screen. window.print() shows only this div.
+       Built with <table> + solid colours — renders correctly
+       in Chrome, Firefox, Edge and Safari print dialogs.
+  ═══════════════════════════════════════════════════════ -->
+  <div id="printReport">
+
+    <!-- HEADER -->
+    <table class="pr-hdr-table" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="vertical-align:top">
+          <div class="pr-logo-text">Auto<span>Healz</span>.</div>
+
+        </td>
+        <td class="pr-meta-cell">
+          <strong>Report Date:</strong> <span id="prDate"></span><br>
+          <strong>Vehicle:</strong> Maruti Suzuki {{ car_model }}<br>
+          <strong>Parts Detected:</strong> {{ detections|length }}<br>
+          <strong>Overall Severity:</strong>&nbsp;<span class="pr-badge {% if overall_severity == 'Severe' %}pr-severe{% elif overall_severity == 'Moderate' %}pr-moderate{% else %}pr-minor{% endif %}">{{ overall_severity }}</span>
+        </td>
+      </tr>
+    </table>
+
+    <p class="pr-h1">Damage Report</p>
+
+    <img src="{{ image_url }}" class="pr-photo" alt="damaged car">
+
+    {% if detections %}
+    <div class="pr-section">&#9651; Detected Damaged Parts</div>
+
+    {% for det in detections %}
+    <div class="pr-card">
+
+      <!-- Part name row -->
+      <table class="pr-part-header-table" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>
+            <span class="pr-pname">{{ det.part_name }}</span>&nbsp;&nbsp;
+            <span class="pr-badge {% if det.severity == 'Severe' %}pr-severe{% elif det.severity == 'Moderate' %}pr-moderate{% else %}pr-minor{% endif %}">{{ det.severity }}</span>
+          </td>
+          <td class="pr-conf-text">conf {{ det.conf }}</td>
+        </tr>
+      </table>
+
+      <div class="pr-caption">{{ det.display_caption }}</div>
+
+      {% if det.knn and not det.knn.error %}
+      <div class="pr-chips-row">
+        <span class="pr-chip">Part: <strong>{{ det.knn.part }}</strong></span>
+        <span class="pr-chip">Damage: <strong>{{ det.knn.damage_type }}</strong></span>
+        <span class="pr-chip">Area: <strong>{{ det.knn.area }}</strong></span>
+        <span class="pr-chip">Level: <strong>{{ det.knn.level_label }}</strong></span>
+      </div>
+      {% endif %}
+
+      {% if det.breakdown %}
+      <table class="pr-cost-table" cellpadding="0" cellspacing="0">
+        <tr>
+          <td><span class="pr-clbl">Base repair</span><span class="pr-cval">&#8377;{{ det.breakdown.base }}</span></td>
+          <td><span class="pr-clbl">Labour (12%)</span><span class="pr-cval">&#8377;{{ det.breakdown.labour }}</span></td>
+          <td><span class="pr-clbl">GST (18%)</span><span class="pr-cval">&#8377;{{ det.breakdown.gst }}</span></td>
+          <td class="pr-ctotal"><span class="pr-clbl">Part total</span><span class="pr-cval">&#8377;{{ det.breakdown.grand_total }}</span></td>
+        </tr>
+      </table>
+      {% endif %}
+
+      {% if det.part_options %}
+      <table class="pr-avail-table" cellpadding="0" cellspacing="0">
+        <tr><th colspan="3">&#128230; Part Availability Options</th></tr>
+        {% if det.part_options.original %}
+        <tr class="pr-row-oem">
+          <td><span class="pr-adot" style="background:#0fa882"></span>OEM / Original</td>
+          <td>&#8377;{{ det.part_options.original.price_range }}</td>
+          <td style="color:#0fa882;font-weight:700">&#10003; Available</td>
+        </tr>
+        {% endif %}
+        {% if det.part_options.alternative %}
+        <tr class="pr-row-alt">
+          <td><span class="pr-adot" style="background:#e8920a"></span>Aftermarket / Alternative</td>
+          <td>&#8377;{{ det.part_options.alternative.price_range }}</td>
+          <td style="color:#e8920a;font-weight:700">&#8635; Available</td>
+        </tr>
+        {% endif %}
+        {% if det.part_options.not_available %}
+        <tr class="pr-row-none">
+          <td><span class="pr-adot" style="background:#aaa"></span>Genuine OEM (Dealer Order)</td>
+          <td>&#8377;{{ det.part_options.not_available.price_range }}</td>
+          <td style="color:#888;font-weight:700">&#8987; Order Required</td>
+        </tr>
+        {% endif %}
+      </table>
+      {% endif %}
+
+    </div>
+    {% endfor %}
+
+    {% if grand_total %}
+    <!-- GRAND TOTAL — table layout, solid bg colours for reliable print rendering -->
+    <div class="pr-grand-wrap">
+      <table class="pr-grand-table" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="pr-grand-left">
+            <div class="pr-grand-lbl">Total Repair Estimate</div>
+            <div class="pr-grand-amt">&#8377;{{ grand_total }}</div>
+            <div class="pr-grand-note">incl. labour &amp; GST</div>
+          </td>
+          <td class="pr-grand-right">
+            <table class="pr-gtable" cellpadding="0" cellspacing="0">
+              <tr><td>Parts &amp; base repair</td><td>&#8377;{{ total_base }}</td></tr>
+              <tr><td>Labour (12%)</td><td>&#8377;{{ total_labour }}</td></tr>
+              <tr><td>GST (18%)</td><td>&#8377;{{ total_gst }}</td></tr>
+              <tr class="pr-gtotal"><td><strong>Grand Total</strong></td><td><strong>&#8377;{{ grand_total }}</strong></td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <!-- DISCLAIMER FOOTER -->
+    <div class="pr-footer-wrap">
+      <strong>AutoHealz</strong> &nbsp;&middot;&nbsp; Pimpri Chichwad 411017
+      &nbsp;&middot;&nbsp; +91 8928856280 &nbsp;&middot;&nbsp; AutoHealz@gmail.com
+    </div>
+
+  </div><!-- /#printReport -->
+
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script>
+    // Set report date
+    const _d = new Date().toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
+    const _el = document.getElementById('prDate');
+    if (_el) _el.textContent = _d;
+
+    // Print: show only #printReport via CSS @media print, then call print
+    function printReport() {
+      window.print();
+    }
+  </script>
+
+</body>
+</html>
