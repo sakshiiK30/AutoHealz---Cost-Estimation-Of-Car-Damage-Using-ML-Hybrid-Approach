@@ -58,7 +58,7 @@ def detect_damage(image_path: str) -> list:
         results = model.predict(
             source=image_path,
             conf=0.4,
-            imgsz=224,          # lowered from 320 to reduce memory use
+            imgsz=441,          # lowered from 320 to reduce memory use
             fuse=False,
             device="cpu",
             verbose=False,
