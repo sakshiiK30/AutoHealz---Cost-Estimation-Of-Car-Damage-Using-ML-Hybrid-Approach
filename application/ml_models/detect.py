@@ -25,6 +25,9 @@ def get_model():
 
         _model = YOLO(_model_path)
 
+        # CPU optimization
+        _model.to("cpu")
+
     return _model
 
 
@@ -46,7 +49,15 @@ def detect_damage(image_path: str) -> list:
     """
     model = get_model()
 
-    results = model(image_path, conf=0.4)
+    results = model.predict(
+    source=image_path,
+    conf=0.4,
+    imgsz=320,
+    fuse=False,
+    device="cpu",
+    half=False,
+    verbose=False
+    )
     detections = []
 
     for r in results:
