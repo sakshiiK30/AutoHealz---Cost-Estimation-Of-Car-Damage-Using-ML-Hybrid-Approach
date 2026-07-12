@@ -6,8 +6,9 @@
 # ============================================================
 
 import os
-from ultralytics import YOLO
 
+os.environ["YOLO_CONFIG_DIR"] = "/tmp/Ultralytics"
+from ultralytics import YOLO
 # Load model only when required (Render memory fix)
 
 _model = None
@@ -49,15 +50,18 @@ def detect_damage(image_path: str) -> list:
     """
     model = get_model()
 
+    print("YOLO starting inference")
+
     results = model.predict(
     source=image_path,
     conf=0.4,
     imgsz=320,
     fuse=False,
     device="cpu",
-    half=False,
     verbose=False
-    )
+   )
+
+    print("YOLO completed")
     detections = []
 
     for r in results:
