@@ -15,6 +15,9 @@ from pathlib import Path
 import dj_database_url
 from dotenv import load_dotenv
 
+import os
+
+os.environ["YOLO_CONFIG_DIR"] = "/tmp/Ultralytics"
 
 load_dotenv()
 
