@@ -6,16 +6,20 @@
 # ============================================================
 
 import os
+import gc
 
 os.environ["YOLO_CONFIG_DIR"] = "/tmp/Ultralytics"
-from ultralytics import YOLO
-# Load model only when required (Render memory fix)
 
+import torch
+torch.set_num_threads(1)  # Prevent multi-threaded CPU spikes on low-RAM hosting
+
+from ultralytics import YOLO
+
+# Load model only when required (Render memory fix)
 _model = None
 
 
 def get_model():
-
     global _model
 
     if _model is None:
@@ -25,8 +29,6 @@ def get_model():
         )
 
         _model = YOLO(_model_path)
-
-        # CPU optimization
         _model.to("cpu")
 
     return _model
@@ -52,16 +54,23 @@ def detect_damage(image_path: str) -> list:
 
     print("YOLO starting inference")
 
-    results = model.predict(
-    source=image_path,
-    conf=0.4,
-    imgsz=320,
-    fuse=False,
-    device="cpu",
-    verbose=False
-   )
+    try:
+        results = model.predict(
+            source=image_path,
+            conf=0.4,
+            imgsz=224,          # lowered from 320 to reduce memory use
+            fuse=False,
+            device="cpu",
+            verbose=False,
+            half=False,
+        )
+    except Exception as e:
+        print(f"[YOLO] ❌ INFERENCE ERROR: {e}")
+        gc.collect()
+        return []
 
     print("YOLO completed")
+
     detections = []
 
     for r in results:
@@ -70,7 +79,6 @@ def detect_damage(image_path: str) -> list:
             class_name = model.names[class_id]
             conf       = float(box.conf[0])
 
-            # xyxy gives absolute pixel coords as tensor
             xyxy = box.xyxy[0].tolist()
             bbox = [int(xyxy[0]), int(xyxy[1]), int(xyxy[2]), int(xyxy[3])]
 
@@ -79,5 +87,9 @@ def detect_damage(image_path: str) -> list:
                 "bbox" : bbox,
                 "conf" : round(conf, 3),
             })
+
+    # Free memory immediately after inference
+    del results
+    gc.collect()
 
     return detections

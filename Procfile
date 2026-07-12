@@ -1,1 +1,1 @@
-web: gunicorn Autohealz.wsgi:application
+web: gunicorn myproject.wsgi:application --workers 1 --threads 2 --timeout 120 --max-requests 20 --max-requests-jitter 5
