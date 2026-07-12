@@ -446,6 +446,8 @@ def estimate(request):
         normalized       = list(unique_parts.values())
         availability_map = load_part_availability()
 
+        generate_caption = get_generate_caption()
+
         for det in normalized:
             bbox      = det.get('bbox')
             severity  = _get_severity(bbox)
@@ -453,15 +455,12 @@ def estimate(request):
 
             if bbox:
                 x1, y1, x2, y2 = bbox
-                generate_caption = get_generate_caption()
-                caption = generate_caption(
-                pil_image.crop((x1, y1, x2, y2))
-                )
+                crop = pil_image.crop((x1, y1, x2, y2))
+                caption = generate_caption(crop)
             else:
-                generate_caption = get_generate_caption()
                 caption = generate_caption(pil_image)
 
-            key          = f"{car_model}_{part_name}"
+            key = f"{car_model}_{part_name}"
             part_options = availability_map.get(key, {
                 "original":      None,
                 "alternative":   None,
