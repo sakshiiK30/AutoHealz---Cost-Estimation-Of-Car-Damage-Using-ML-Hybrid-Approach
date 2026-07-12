@@ -8,9 +8,24 @@
 import os
 from ultralytics import YOLO
 
-# Load model ONCE at import time
-_model_path = os.path.join(os.path.dirname(__file__), "damage_model.pt")
-_model      = YOLO(_model_path)
+# Load model only when required (Render memory fix)
+
+_model = None
+
+
+def get_model():
+
+    global _model
+
+    if _model is None:
+        _model_path = os.path.join(
+            os.path.dirname(__file__),
+            "damage_model.pt"
+        )
+
+        _model = YOLO(_model_path)
+
+    return _model
 
 
 def detect_damage(image_path: str) -> list:
@@ -29,13 +44,15 @@ def detect_damage(image_path: str) -> list:
 
     Empty list if nothing detected.
     """
-    results    = _model(image_path, conf=0.4)
+    model = get_model()
+
+    results = model(image_path, conf=0.4)
     detections = []
 
     for r in results:
         for box in r.boxes:
             class_id   = int(box.cls[0])
-            class_name = _model.names[class_id]
+            class_name = model.names[class_id]
             conf       = float(box.conf[0])
 
             # xyxy gives absolute pixel coords as tensor

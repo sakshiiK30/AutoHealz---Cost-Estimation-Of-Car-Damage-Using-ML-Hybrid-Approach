@@ -13,9 +13,7 @@ from datetime import datetime
 
 from .models import enquiry_table, Appointment, UserProfile
 
-from .ml_models.detect import detect_damage
-from .ml_models.blip_model import generate_caption
-from .ml_models.knn_model import predict_total_cost
+
 
 import os
 import re
@@ -25,6 +23,23 @@ import hashlib
 
 from PIL import Image
 
+# ============================================================
+# LAZY LOAD ML MODELS (Render memory fix)
+# ============================================================
+
+def get_detect_damage():
+    from .ml_models.detect import detect_damage
+    return detect_damage
+
+
+def get_generate_caption():
+    from .ml_models.blip_model import generate_caption
+    return generate_caption
+
+
+def get_predict_total_cost():
+    from .ml_models.knn_model import predict_total_cost
+    return predict_total_cost
 
 GST_RATE    = 0.18
 LABOUR_RATE = 0.12
@@ -419,6 +434,7 @@ def estimate(request):
 
         image_url  = settings.MEDIA_URL + img.name
         pil_image  = Image.open(image_path).convert("RGB")
+        detect_damage = get_detect_damage()
         raw_detections = detect_damage(image_path)
 
         unique_parts = {}
@@ -437,8 +453,12 @@ def estimate(request):
 
             if bbox:
                 x1, y1, x2, y2 = bbox
-                caption = generate_caption(pil_image.crop((x1, y1, x2, y2)))
+                generate_caption = get_generate_caption()
+                caption = generate_caption(
+                pil_image.crop((x1, y1, x2, y2))
+                )
             else:
+                generate_caption = get_generate_caption()
                 caption = generate_caption(pil_image)
 
             key          = f"{car_model}_{part_name}"
@@ -457,7 +477,12 @@ def estimate(request):
             })
 
         detections  = normalized
-        knn_output  = predict_total_cost(car_model, detections)
+        predict_total_cost = get_predict_total_cost()
+
+        knn_output = predict_total_cost(
+          car_model,
+          detections
+    )
         knn_results = knn_output["results"]
 
         total_base = total_labour = total_gst = grand_total = 0
