@@ -33,13 +33,15 @@ https://autohealz-cost-estimation-of-car-damage.onrender.com
 
 ![Cost Estimation](screenshots/Cost%20Estimation.png)
 
+### 💰 Cost Analysis
+
+![Cost Analysis](screenshots/Cost%20Analysis.png)
+
 ### 📋 Damage Report
 
 ![Damage Report](screenshots/Damage%20Report%201.png)
 
-### 💰 Cost Analysis
-
-![Cost Analysis](screenshots/Cost%20Analysis.png)
+![Damage Report](screenshots/Damage%20Report%202.png)
 
 ### 📅 Book Appointment
 
