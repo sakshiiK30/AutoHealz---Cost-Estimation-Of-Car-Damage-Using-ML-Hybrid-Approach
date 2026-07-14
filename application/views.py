@@ -35,11 +35,6 @@ def get_detect_damage():
     return detect_damage
 
 
-def get_generate_caption():
-    from .ml_models.blip_model import generate_caption
-    return generate_caption
-
-
 def get_predict_total_cost():
     from .ml_models.knn_model import predict_total_cost
     return predict_total_cost
@@ -414,6 +409,17 @@ def _get_overall_severity(detections):
     return 'Minor'
 
 
+CAPTION_TEMPLATES = {
+    "Minor":    "{part} shows minor surface-level damage.",
+    "Moderate": "{part} has moderate damage and will need repair.",
+    "Severe":   "{part} shows severe damage and may require replacement.",
+}
+
+def _generate_simple_caption(part_name, severity):
+    template = CAPTION_TEMPLATES.get(severity, CAPTION_TEMPLATES["Moderate"])
+    return template.format(part=part_name)
+
+
 # ============================================================
 # ESTIMATE PAGE
 # ============================================================
@@ -460,19 +466,12 @@ def estimate(request):
             normalized       = list(unique_parts.values())
             availability_map = load_part_availability()
 
-            generate_caption = get_generate_caption()
-
             for det in normalized:
                 bbox      = det.get('bbox')
                 severity  = _get_severity(bbox)
                 part_name = PART_NAMES.get(det['class'], det['class'].replace('-', ' ').title())
 
-                if bbox:
-                    x1, y1, x2, y2 = bbox
-                    crop = pil_image.crop((x1, y1, x2, y2))
-                    caption = generate_caption(crop)
-                else:
-                    caption = generate_caption(pil_image)
+                caption = _generate_simple_caption(part_name, severity)
 
                 key = f"{car_model}_{part_name}"
                 part_options = availability_map.get(key, {
@@ -489,9 +488,8 @@ def estimate(request):
                     'part_options':    part_options,
                 })
 
-            # Free BLIP from memory before KNN/pandas step
-            from .ml_models.blip_model import unload_blip
-            unload_blip()
+            # No BLIP to unload anymore — captions are now templated,
+            # so this step is just a general memory sweep before KNN/pandas.
             gc.collect()
 
             detections  = normalized
