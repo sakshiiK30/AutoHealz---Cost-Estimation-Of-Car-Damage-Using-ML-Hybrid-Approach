@@ -92,3 +92,10 @@ def detect_damage(image_path: str) -> list:
     gc.collect()
 
     return detections
+
+
+def unload_model():
+    """Free YOLO from RAM after inference so BLIP has room to load."""
+    global _model
+    _model = None
+    gc.collect()

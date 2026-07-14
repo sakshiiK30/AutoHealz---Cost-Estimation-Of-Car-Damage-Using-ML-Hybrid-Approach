@@ -21,6 +21,7 @@ import csv
 import json
 import hashlib
 import uuid
+import gc
 
 from PIL import Image
 
@@ -442,6 +443,10 @@ def estimate(request):
         detect_damage = get_detect_damage()
         raw_detections = detect_damage(image_path)
 
+        # Free YOLO from memory before BLIP loads
+        from .ml_models.detect import unload_model as unload_yolo
+        unload_yolo()
+
         unique_parts = {}
         for det in raw_detections:
             cls = det['class']
@@ -479,6 +484,11 @@ def estimate(request):
                 'display_caption': f"{part_name} - {severity} damage.",
                 'part_options':    part_options,
             })
+
+        # Free BLIP from memory before KNN/pandas step
+        from .ml_models.blip_model import unload_blip
+        unload_blip()
+        gc.collect()
 
         detections  = normalized
         predict_total_cost = get_predict_total_cost()

@@ -1,5 +1,6 @@
 from transformers import BlipProcessor, BlipForConditionalGeneration
 import torch
+import gc
 
 processor = None
 model = None
@@ -14,7 +15,8 @@ def load_blip():
         )
 
         model = BlipForConditionalGeneration.from_pretrained(
-            "Salesforce/blip-image-captioning-base"
+            "Salesforce/blip-image-captioning-base",
+            low_cpu_mem_usage=True,
         )
 
         model.eval()
@@ -44,3 +46,11 @@ def generate_caption(image):
     )
 
     return caption
+
+
+def unload_blip():
+    """Free BLIP from RAM after captioning is done."""
+    global processor, model
+    processor = None
+    model = None
+    gc.collect()
