@@ -57,8 +57,8 @@ def detect_damage(image_path: str) -> list:
     try:
         results = model.predict(
         source=image_path,
-        conf=0.4,
-        imgsz=224,
+        conf=0.25,
+        imgsz=640,
         device="cpu",
         verbose=False,
         half=False,
@@ -95,7 +95,7 @@ def detect_damage(image_path: str) -> list:
 
 
 def unload_model():
-    """Free YOLO from RAM after inference so BLIP has room to load."""
+    """Free YOLO from RAM after inference so downstream steps have room."""
     global _model
     _model = None
     gc.collect()
