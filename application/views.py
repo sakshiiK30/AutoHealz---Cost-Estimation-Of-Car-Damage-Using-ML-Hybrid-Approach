@@ -22,6 +22,7 @@ import json
 import hashlib
 import uuid
 import gc
+import traceback
 
 from PIL import Image
 
@@ -426,7 +427,6 @@ def estimate(request):
         if car_model not in SUPPORTED_MODELS:
             car_model = 'Swift'
 
-        
         img = request.FILES['image']
 
         os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
@@ -440,75 +440,82 @@ def estimate(request):
 
         image_url = settings.MEDIA_URL + filename
         pil_image  = Image.open(image_path).convert("RGB")
-        detect_damage = get_detect_damage()
-        raw_detections = detect_damage(image_path)
 
-        # Free YOLO from memory before BLIP loads
-        from .ml_models.detect import unload_model as unload_yolo
-        unload_yolo()
+        # ── All heavy ML processing wrapped so failures are logged
+        # instead of surfacing as a bare, unexplained 500 ──────────
+        try:
+            detect_damage = get_detect_damage()
+            raw_detections = detect_damage(image_path)
 
-        unique_parts = {}
-        for det in raw_detections:
-            cls = det['class']
-            if cls not in unique_parts or det['conf'] > unique_parts[cls]['conf']:
-                unique_parts[cls] = det
+            # Free YOLO from memory before BLIP loads
+            from .ml_models.detect import unload_model as unload_yolo
+            unload_yolo()
 
-        normalized       = list(unique_parts.values())
-        availability_map = load_part_availability()
+            unique_parts = {}
+            for det in raw_detections:
+                cls = det['class']
+                if cls not in unique_parts or det['conf'] > unique_parts[cls]['conf']:
+                    unique_parts[cls] = det
 
-        generate_caption = get_generate_caption()
+            normalized       = list(unique_parts.values())
+            availability_map = load_part_availability()
 
-        for det in normalized:
-            bbox      = det.get('bbox')
-            severity  = _get_severity(bbox)
-            part_name = PART_NAMES.get(det['class'], det['class'].replace('-', ' ').title())
+            generate_caption = get_generate_caption()
 
-            if bbox:
-                x1, y1, x2, y2 = bbox
-                crop = pil_image.crop((x1, y1, x2, y2))
-                caption = generate_caption(crop)
-            else:
-                caption = generate_caption(pil_image)
+            for det in normalized:
+                bbox      = det.get('bbox')
+                severity  = _get_severity(bbox)
+                part_name = PART_NAMES.get(det['class'], det['class'].replace('-', ' ').title())
 
-            key = f"{car_model}_{part_name}"
-            part_options = availability_map.get(key, {
-                "original":      None,
-                "alternative":   None,
-                "not_available": None,
-            })
+                if bbox:
+                    x1, y1, x2, y2 = bbox
+                    crop = pil_image.crop((x1, y1, x2, y2))
+                    caption = generate_caption(crop)
+                else:
+                    caption = generate_caption(pil_image)
 
-            det.update({
-                'severity':        severity,
-                'part_name':       part_name,
-                'caption':         caption,
-                'display_caption': f"{part_name} - {severity} damage.",
-                'part_options':    part_options,
-            })
+                key = f"{car_model}_{part_name}"
+                part_options = availability_map.get(key, {
+                    "original":      None,
+                    "alternative":   None,
+                    "not_available": None,
+                })
 
-        # Free BLIP from memory before KNN/pandas step
-        from .ml_models.blip_model import unload_blip
-        unload_blip()
-        gc.collect()
+                det.update({
+                    'severity':        severity,
+                    'part_name':       part_name,
+                    'caption':         caption,
+                    'display_caption': f"{part_name} - {severity} damage.",
+                    'part_options':    part_options,
+                })
 
-        detections  = normalized
-        predict_total_cost = get_predict_total_cost()
+            # Free BLIP from memory before KNN/pandas step
+            from .ml_models.blip_model import unload_blip
+            unload_blip()
+            gc.collect()
 
-        knn_output = predict_total_cost(
-          car_model,
-          detections
-    )
-        knn_results = knn_output["results"]
+            detections  = normalized
+            predict_total_cost = get_predict_total_cost()
 
-        total_base = total_labour = total_gst = grand_total = 0
+            knn_output = predict_total_cost(car_model, detections)
+            knn_results = knn_output["results"]
 
-        for det, knn_res in zip(detections, knn_results):
-            det['knn'] = knn_res
-            if 'estimated_cost' in knn_res:
-                det['breakdown'] = _cost_breakdown(knn_res['estimated_cost'])
-                total_base   += det['breakdown']['base']
-                total_labour += det['breakdown']['labour']
-                total_gst    += det['breakdown']['gst']
-                grand_total  += det['breakdown']['grand_total']
+            total_base = total_labour = total_gst = grand_total = 0
+
+            for det, knn_res in zip(detections, knn_results):
+                det['knn'] = knn_res
+                if 'estimated_cost' in knn_res:
+                    det['breakdown'] = _cost_breakdown(knn_res['estimated_cost'])
+                    total_base   += det['breakdown']['base']
+                    total_labour += det['breakdown']['labour']
+                    total_gst    += det['breakdown']['gst']
+                    grand_total  += det['breakdown']['grand_total']
+
+        except Exception:
+            print("[ESTIMATE] ❌ PROCESSING ERROR:")
+            traceback.print_exc()
+            messages.error(request, "Something went wrong while analyzing the image. Please try again.")
+            return redirect('estimate')
 
         request.session['estimation_results'] = {
             'car_model':        car_model,
