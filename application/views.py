@@ -20,6 +20,7 @@ import re
 import csv
 import json
 import hashlib
+import uuid
 
 from PIL import Image
 
@@ -424,15 +425,19 @@ def estimate(request):
         if car_model not in SUPPORTED_MODELS:
             car_model = 'Swift'
 
+        
         img = request.FILES['image']
+
         os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
-        image_path = os.path.join(settings.MEDIA_ROOT, img.name)
 
-        with open(image_path, 'wb+') as f:
-            for chunk in img.chunks():
-                f.write(chunk)
+        filename = f"{uuid.uuid4()}.jpg"
+        image_path = os.path.join(settings.MEDIA_ROOT, filename)
 
-        image_url  = settings.MEDIA_URL + img.name
+        with open(image_path, "wb+") as f:
+             for chunk in img.chunks():
+                 f.write(chunk)
+
+        image_url = settings.MEDIA_URL + filename
         pil_image  = Image.open(image_path).convert("RGB")
         detect_damage = get_detect_damage()
         raw_detections = detect_damage(image_path)
