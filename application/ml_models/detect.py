@@ -56,14 +56,13 @@ def detect_damage(image_path: str) -> list:
 
     try:
         results = model.predict(
-            source=image_path,
-            conf=0.4,
-            imgsz=224,          # lowered from 320 to reduce memory use
-            fuse=False,
-            device="cpu",
-            verbose=False,
-            half=False,
-        )
+        source=image_path,
+        conf=0.4,
+        imgsz=224,
+        device="cpu",
+        verbose=False,
+        half=False,
+    )
     except Exception as e:
         print(f"[YOLO] ❌ INFERENCE ERROR: {e}")
         gc.collect()
