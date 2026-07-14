@@ -5,10 +5,10 @@ URL configuration for Autohealz project.
 from django.urls import path
 from application import views
 from django.conf import settings
-from django.conf.urls.static import static
+from django.views.static import serve
 
 urlpatterns = [
-    
+
 
     # ── Public pages ──────────────────────────────────────────────
     path('', views.index, name='home'),
@@ -56,4 +56,9 @@ urlpatterns = [
     # NEW: AJAX real-time username/email uniqueness check for signup
     path('check-field/', views.check_field, name='check_field'),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # ── Media files ──────────────────────────────────────────────
+    # Explicit, unconditional route (works in production too).
+    # Django's built-in static() helper silently no-ops when DEBUG=False,
+    # so we serve media directly via django.views.static.serve instead.
+    path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),
+]
